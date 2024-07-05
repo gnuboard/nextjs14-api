@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/components/ThemeContext';
 import GlobalStyle from '@/components/GlobalStyle';
 
 export const metadata = {
-  title: 'Opus',
+  title: 'g6-api-연결',
 };
 
 const RootLayout = ({ children }) => {

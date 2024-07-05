@@ -1,41 +1,77 @@
 // src/components/AuthContext.js
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [username, setUsername] = useState(null);
+  const [memberInfo, setMemberInfo] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    // 페이지 로드 시 로컬 스토리지에서 로그인 상태를 복원
-    const savedAccessToken = localStorage.getItem('accessToken');
-    const savedUsername = localStorage.getItem('username');
-    if (savedAccessToken && savedUsername) {
-      setAccessToken(savedAccessToken);
-      setUsername(savedUsername);
+    const savedToken = sessionStorage.getItem('accessToken');
+    if (savedToken) {
+      setAccessToken(savedToken);
+      fetchMemberInfo(savedToken);
     }
   }, []);
 
-  const login = (token, user) => {
-    setAccessToken(token);
-    setUsername(user);
-    localStorage.setItem('accessToken', token);
-    localStorage.setItem('username', user);
+  const fetchMemberInfo = async (token) => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/members/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // console.log('Member info:', response.data);
+      setMemberInfo(response.data);
+      setIsLogin(true);
+    } catch (error) {
+      console.error('Error fetching member info:', error);
+      logout();
+    }
+  };
+
+  const login = async (username, password) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/token`,
+        {
+          username, 
+          password
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      );
+
+      // console.log('Login response:', response.data);
+  
+      const { access_token } = response.data;
+      setAccessToken(access_token);
+      sessionStorage.setItem('accessToken', access_token);
+      await fetchMemberInfo(access_token);
+      setIsLogin(true);
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   };
 
   const logout = () => {
     setAccessToken(null);
     setUsername(null);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('username');
+    setMemberInfo(null);
+    setIsLogin(false);
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('username');
   };
 
-  const isMember = !!accessToken && !!username;
-
   return (
-    <AuthContext.Provider value={{ accessToken, username, isMember, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, username, memberInfo, isLogin, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

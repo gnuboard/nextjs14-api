@@ -1,3 +1,5 @@
+// src/components/Header.js
+
 "use client";
 
 import React, { useState } from 'react';
@@ -15,7 +17,9 @@ const Header = ({ backgroundColor }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSubMenu, setOpenSubMenu] = useState(false);
   const [openDrawerSubMenu, setOpenDrawerSubMenu] = useState(false);
-  const { accessToken, username, logout } = useAuth();
+  const { isLogin, memberInfo, logout } = useAuth();
+
+  // console.log(memberInfo);
 
   const toggleSideMenu = () => {
     setIsOpen(!isOpen);
@@ -106,9 +110,9 @@ const Header = ({ backgroundColor }) => {
             ))}
           </List>
 
-          {accessToken ? (
+          {isLogin ? (
             <>
-              <Tooltip title="로그아웃">
+              <Tooltip title={`${memberInfo?.mb_nick || '사용자'}님 로그인중`}>
                 <IconButton color="inherit" onClick={handleLogout}>
                   <LogoutIcon />
                 </IconButton>
@@ -159,9 +163,13 @@ const Header = ({ backgroundColor }) => {
               </ListItem>
             )
           ))}
-          {!accessToken && (
+          {!isLogin ? (
             <ListItem button component={Link} href="/login" onClick={toggleSideMenu}>
               <ListItemText primary="Login" />
+            </ListItem>
+          ) : (
+            <ListItem button onClick={handleLogout}>
+              <ListItemText primary={`${memberInfo?.mb_nick || '사용자'}님 (로그아웃)`} />
             </ListItem>
           )}
         </List>

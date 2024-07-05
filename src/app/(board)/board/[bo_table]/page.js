@@ -7,7 +7,7 @@ import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 import Search from './Search';
 import './pagination.css';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import { useAuth } from '@/components/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -52,7 +52,7 @@ export default function ListWritesPage({ params }) {
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const { isMember } = useAuth();
+  const { isLogin } = useAuth();
 
   useEffect(() => {
     const loadWrites = async () => {
@@ -92,17 +92,26 @@ export default function ListWritesPage({ params }) {
     }
   };
 
+  const handleWriteClick = () => {
+    router.push(`/board/write/${bo_table}`);
+  };
+
   return (
     <div>
       <Typography variant="h4" gutterBottom>{board.bo_subject}</Typography>
-      <Search 
-        sfl={sfl} 
-        stx={stx} 
-        onSflChange={(value) => handleFieldChange('sfl', value)} 
-        onStxChange={(value) => handleFieldChange('stx', value)} 
-        onSubmit={handleSearchSubmit} 
-        isMember={isMember} 
-      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Search 
+          sfl={sfl} 
+          stx={stx} 
+          onSflChange={(value) => handleFieldChange('sfl', value)} 
+          onStxChange={(value) => handleFieldChange('stx', value)} 
+          onSubmit={handleSearchSubmit} 
+          isLogin={isLogin} 
+        />
+        <Button variant="contained" color="primary" onClick={handleWriteClick}>
+          글쓰기
+        </Button>
+      </div>
       <ListWrites writes={writes} board={board} />
       <ReactPaginate
         initialPage={currentPage - 1} // Set the initial page correctly

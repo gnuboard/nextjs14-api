@@ -20,7 +20,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const { login } = useAuth();  // useAuth hook 사용
+  const { login } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,15 +31,12 @@ export default function Login() {
     }
 
     try {
-      // Replace with actual login logic
-      // Mocking login success with a token
-      const token = 'mock-token';
-      login(token, username);
+      await login(username, password); // 실제 로그인 함수 호출
       console.log('로그인 성공');
       router.push('/');
     } catch (error) {
       console.error('로그인 에러:', error);
-      setError(error.message);
+      setError(error.response?.data?.message || '로그인에 실패했습니다.');
     }
   };
 

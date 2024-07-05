@@ -20,7 +20,7 @@ const Board = ({ bo_table }) => {
         });
 
         const data = response.data;
-        console.log('data:', data);
+        // console.log('data:', data);
         if (data.board) {
           setBoard(data.board);
         } else {
