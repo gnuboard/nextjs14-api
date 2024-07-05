@@ -1,0 +1,35 @@
+/* src/app/globals.css */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Malgun Gothic', Arial, sans-serif;
+  font-size: 14px !important; /* 전체 글꼴 크기를 줄입니다. */
+}
+
+/* 입력 필드와 셀렉트 박스 크기 조정 */
+.MuiTextField-root,
+.MuiFormControl-root,
+.MuiSelect-root {
+  font-size: 12x !important; /* 텍스트 크기 조정 */
+  height: 40px !important; /* 높이 조정 */
+}
+
+.MuiInputLabel-root {
+  font-size: 14px !important; /* 레이블 크기 조정 */
+}
+
+.MuiButton-root {
+  font-size: 14px !important; /* 버튼 텍스트 크기 조정 */
+  height: 40px !important; /* 버튼 높이 조정 */
+}
+
+.MuiOutlinedInput-input {
+  padding: 10px !important; /* 입력 필드 안쪽 여백 조정 */
+  font-size: 14px !important; /* 입력 필드 텍스트 크기 조정 */
+}
+
+/* 셀렉트 박스 항목 크기 조정 */
+.MuiMenuItem-root {
+  font-size: 14px !important;
+}
