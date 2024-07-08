@@ -10,10 +10,12 @@ import {
   Typography, 
   Paper,
   Snackbar,
-  Alert
+  Alert,
+  Link as MuiLink
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthContext';
+import Link from 'next/link';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -31,7 +33,7 @@ export default function Login() {
     }
 
     try {
-      await login(username, password); // 실제 로그인 함수 호출
+      await login(username, password);
       console.log('로그인 성공');
       router.push('/');
     } catch (error) {
@@ -91,6 +93,13 @@ export default function Login() {
             >
               로그인
             </Button>
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <Link href="/signup" passHref>
+                <MuiLink variant="body2">
+                  계정이 없으신가요? 회원가입
+                </MuiLink>
+              </Link>
+            </Box>
           </Box>
         </Paper>
       </Box>
