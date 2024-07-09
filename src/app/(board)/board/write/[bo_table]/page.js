@@ -11,7 +11,7 @@ import { useAuth } from '@/components/AuthContext';
 import { useBoardConfig } from '@/hooks/useBoardConfig';
 import MenuItem from '@mui/material/MenuItem';
 
-async function submitWrite(bo_table, formData) {
+async function submitWrite(bo_table, formData, isLogin) {
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes`;
 
   // 불리언 값을 문자열로 변환
@@ -25,12 +25,20 @@ async function submitWrite(bo_table, formData) {
 
   try {
     const token = sessionStorage.getItem('accessToken');
-
-    const response = await axios.post(url, JSON.stringify(dataToSend), {
-      headers: {
+    let headers = {}
+    if (isLogin) {
+      headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       }
+    } else {
+      headers = {
+        'Content-Type': 'application/json',
+      }
+    }
+
+    const response = await axios.post(url, JSON.stringify(dataToSend), {
+      headers: headers
     });
     return response.data;
   } catch (error) {
@@ -93,12 +101,18 @@ export default function WritePage({ params }) {
     setError('');
   
     if (!isLogin) {
-      setError('You must be logged in to write a post.');
-      return;
+      if (!formValues.wr_name) {
+        setError('작성자 이름을 입력해주세요.');
+        return;
+      }
+      if(!formValues.wr_password) {
+        setError('비밀번호를 입력해주세요.');
+        return;
+      }
     }
   
     try {
-      await submitWrite(bo_table, formValues);
+      await submitWrite(bo_table, formValues, isLogin);
       router.push(`/board/${bo_table}`);
     } catch (error) {
       console.error('Error submitting write:', error);
