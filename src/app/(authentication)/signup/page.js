@@ -1,12 +1,45 @@
 // src/app/(authentication)/signup/page.js
+'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Container, 
   Card, CardContent, Checkbox, FormControlLabel, FormGroup, Button, Typography, Paper, Box, Divider } from '@mui/material';
 import Image from 'next/image';
 
 export default function Contact() {
+  const [policySignup, setPolicySignup] = useState(false);
+  const [policyPrivacy, setPolicyPrivacy] = useState(false);
+  const [policyAll, setPolicyAll] = useState(false);
+
+  const toggleSignup = (e) => {
+    setPolicySignup(e.target.checked);
+    if (e.target.checked && policyPrivacy) {
+      setPolicyAll(true);
+    } else {
+      setPolicyAll(false);
+    }
+  }
+
+  const togglePrivacy = (e) => {
+    setPolicyPrivacy(e.target.checked);
+    if (e.target.checked && policySignup) {
+      setPolicyAll(true);
+    } else {
+      setPolicyAll(false);
+    }
+  }
+
+  const toggleAll = (e) => {
+    setPolicyAll(e.target.checked);
+    if (e.target.checked) {
+      setPolicySignup(true);
+      setPolicyPrivacy(true);
+    } else {
+      setPolicySignup(false);
+      setPolicyPrivacy(false);
+    }
+  }
   return (
     <div>
       <Box
@@ -34,7 +67,7 @@ export default function Contact() {
             </Typography>
           </Box>
           <FormGroup>
-            <FormControlLabel control={<Checkbox />} label="회원가입약관의 내용에 동의합니다." />
+            <FormControlLabel control={<Checkbox checked={policySignup} onChange={toggleSignup} />} label="회원가입약관의 내용에 동의합니다." />
           </FormGroup>
           <Divider style={{ margin: '20px 0' }} />
           <Typography variant="body1" gutterBottom>
@@ -64,8 +97,8 @@ export default function Contact() {
             </table>
           </Box>
           <FormGroup>
-            <FormControlLabel control={<Checkbox />} label="개인정보처리방침의 내용에 동의합니다." />
-            <FormControlLabel control={<Checkbox />} label="위 내용에 모두 동의합니다." />
+            <FormControlLabel control={<Checkbox checked={policyPrivacy} onChange={togglePrivacy} />} label="개인정보처리방침의 내용에 동의합니다." />
+            <FormControlLabel control={<Checkbox />} checked={policyAll} onChange={toggleAll} label="위 내용에 모두 동의합니다." />
           </FormGroup>
           <Button variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
             회원가입
