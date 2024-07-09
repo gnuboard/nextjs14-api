@@ -1,3 +1,5 @@
+// @/components/Latest.js
+
 "use client";
 
 import axios from 'axios';
