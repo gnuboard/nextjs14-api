@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Container, CssBaseline, TextField, Grid, Checkbox, FormControlLabel,
   FormGroup, Button, Typography, Box, Divider
 } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export const Aggrement = ({ onCheckboxChange }) => {
   const [policySignup, setPolicySignup] = useState(false);
@@ -106,6 +108,8 @@ export const SignupForm = () => {
     mb_open: false,
   });
 
+  const [isSignupLoading, setIsSignupLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -114,10 +118,34 @@ export const SignupForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+    // Signup request
+    setIsSignupLoading(true);
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/members`, formData)
+      if (response.status === 201) {
+        alert(response.data.message);
+        window.location.href="/login";
+      } else {
+        alert(response.status);
+      }
+    } catch (error) {
+      console.error('Error creating member:', error);
+      if (error.response.data.detail) {
+        if (Array.isArray(error.response.data.detail)) {
+          for (let detail of error.response.data.detail) {
+            alert(detail.msg);
+          }
+        } else {
+          alert(error.response.data.detail);
+        }
+      } else {
+        alert(error);
+      }
+    } finally {
+      setIsSignupLoading(false);
+    }
   };
 
   return (
@@ -254,12 +282,13 @@ export const SignupForm = () => {
             />
           </Box>
           <Button
+            disabled={isSignupLoading}
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign Up
+            {isSignupLoading ? <CircularProgress size={24} /> : 'Sign Up'}
           </Button>
         </Box>
       </Box>
