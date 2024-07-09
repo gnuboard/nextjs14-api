@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
- Checkbox, FormControlLabel, FormGroup, Button, Typography, Box, Divider
+import {
+  Container, CssBaseline, TextField, Grid, Checkbox, FormControlLabel,
+  FormGroup, Button, Typography, Box, Divider
 } from '@mui/material';
 
-export const Aggrement = () => {
+export const Aggrement = ({ onCheckboxChange }) => {
   const [policySignup, setPolicySignup] = useState(false);
   const [policyPrivacy, setPolicyPrivacy] = useState(false);
   const [policyAll, setPolicyAll] = useState(false);
@@ -87,8 +88,181 @@ export const Aggrement = () => {
       </Box>
       <FormGroup>
         <FormControlLabel control={<Checkbox checked={policyPrivacy} onChange={togglePrivacy} />} label="개인정보처리방침의 내용에 동의합니다." />
-        <FormControlLabel control={<Checkbox />} checked={policyAll} onChange={toggleAll} label="위 내용에 모두 동의합니다." />
+        <FormControlLabel control={<Checkbox />} checked={policyAll} onChange={(event) => {toggleAll(event);onCheckboxChange(event);}} label="위 내용에 모두 동의합니다." />
       </FormGroup>
     </Box>
   )
 }
+
+export const SignupForm = () => {
+  const [formData, setFormData] = useState({
+    mb_id: '',
+    mb_password: '',
+    mb_password_re: '',
+    mb_name: '',
+    mb_nick: '',
+    mb_email: '',
+    mb_mailling: false,
+    mb_open: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log(formData);
+  };
+
+  return (
+    <Container
+      component="main"
+      padding="0"
+      sx={{
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderStyle: 'solid',
+        borderRadius: '5px',
+      }}
+    >
+      <CssBaseline />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Sign Up
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            사이트 이용정보 입력
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="mb_id"
+                label="아이디 (필수)"
+                name="mb_id"
+                value={formData.mb_id}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                name="mb_password"
+                label="비밀번호 (필수)"
+                type="password"
+                id="mb_password"
+                value={formData.mb_password}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                name="mb_password_re"
+                label="비밀번호 확인 (필수)"
+                type="password"
+                id="mb_password_re"
+                value={formData.mb_password_re}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
+
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              개인정보 입력
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="mb_name"
+                  label="이름 (필수)"
+                  name="mb_name"
+                  value={formData.mb_name}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="mb_nick"
+                  label="닉네임 (필수)"
+                  name="mb_nick"
+                  value={formData.mb_nick}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="mb_email"
+                  label="E-mail (필수)"
+                  name="mb_email"
+                  type="email"
+                  value={formData.mb_email}
+                  onChange={handleChange}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              기타 개인정보 설정
+            </Typography>
+          </Box>
+          <Box sx={{ mt: 3 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="mb_mailling"
+                  checked={formData.mb_mailling}
+                  onChange={handleChange}
+                />
+              }
+              label="정보 메일을 받겠습니다."
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="mb_open"
+                  checked={formData.mb_open}
+                  onChange={handleChange}
+                />
+              }
+              label="다른분들이 나의 정보를 볼 수 있도록 합니다."
+            />
+          </Box>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign Up
+          </Button>
+        </Box>
+      </Box>
+    </Container>
+  );
+};

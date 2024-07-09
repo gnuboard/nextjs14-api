@@ -1,11 +1,15 @@
 // src/app/(authentication)/signup/page.js
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Button, Paper, Box } from '@mui/material';
-import { Aggrement } from '../../../components/Signup';
+import { Aggrement, SignupForm } from '../../../components/Signup';
 
 export default function Contact() {
+  const [allAgreed, setAllAgreed] = useState(false);
+  const [togglePressed, setTogglePressed] = useState(false);
+  const toggleForm = () => {setTogglePressed(!togglePressed)};
+
   return (
     <div>
       <Box
@@ -17,9 +21,9 @@ export default function Contact() {
         }}
       >
         <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
-          <Aggrement></Aggrement>
-          <Button variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
-            회원가입
+          {togglePressed ? <SignupForm /> : <Aggrement onCheckboxChange={e => setAllAgreed(e.target.checked)} />}
+          <Button disabled={!allAgreed} onClick={toggleForm} variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
+            {!togglePressed ? '다음' : '이전'}
           </Button>
           <Button variant="outlined" color="primary" fullWidth style={{ marginTop: 10 }}>
             취소
