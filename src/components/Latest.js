@@ -54,14 +54,14 @@ const Latest = ({ bo_table, view_type, rows }) => {
           {boardData.map((board) => (
             <React.Fragment key={board.wr_id}>
               <ListItem alignItems="flex-start">
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={isSmallScreen ? 10 : 8}>
-                    <Typography variant="body1" component="div">
+                    <Typography variant="body2" component="div">
                       {truncateText(board.wr_subject, 20)}
                     </Typography>
                   </Grid>
                   <Grid item xs={isSmallScreen ? 2 : 2}>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="caption" color="textSecondary">
                       {formatDate(board.wr_datetime)}
                     </Typography>
                   </Grid>

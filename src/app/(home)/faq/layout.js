@@ -6,7 +6,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <>
-      <h2>FAQ layout</h2>
       <div>{children}</div>
     </>
   )

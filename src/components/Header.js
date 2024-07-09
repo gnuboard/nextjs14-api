@@ -19,8 +19,6 @@ const Header = ({ backgroundColor }) => {
   const [openDrawerSubMenu, setOpenDrawerSubMenu] = useState(false);
   const { isLogin, memberInfo, logout } = useAuth();
 
-  // console.log(memberInfo);
-
   const toggleSideMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -44,16 +42,18 @@ const Header = ({ backgroundColor }) => {
   };
 
   const menuItems = [
-    { text: 'About', href: '/about' },
-    { text: 'Products', href: '/products' },
-    { text: 'Shop', href: '/shop' },
+    { text: '회사소개', href: '/about' },
+    { text: '제품소개', href: '/products' },
+    // { text: '쇼핑몰', href: '/shop' },
+    { text: '구입하기', href: '/buy' },
     { text: 'FAQ', href: '/faq' },
-    { text: 'Contact', href: '/contact' },
+    { text: '연락처', href: '/contact' },
   ];
 
   const productSubmenuItems = [
-    { text: 'Item1', href: '/products/item/1' },
-    { text: 'Item2', href: '/products/item/2' },
+    { text: '제품1', href: '/products/item/1' },
+    { text: '제품2', href: '/products/item/2' },
+    { text: '제품3', href: '/products/item/3' },
   ];
 
   return (
@@ -70,10 +70,10 @@ const Header = ({ backgroundColor }) => {
 
           <List sx={{ display: { xs: 'none', sm: 'flex' }, position: 'relative' }}>
             {menuItems.map((item, index) => (
-              item.text === 'Products' ? (
+              item.text === '제품소개' ? (
                 <Box key={index} onMouseEnter={handleMenuOpen} onMouseLeave={handleMenuClose} sx={{ position: 'relative' }}>
-                  <ListItem button>
-                    <ListItemText primary={item.text} />
+                  <ListItem button component={Link} href={item.href}>
+                    <ListItemText primary={item.text} sx={{ whiteSpace: 'nowrap' }} />
                   </ListItem>
                   <Popper
                     open={openSubMenu}
@@ -104,7 +104,7 @@ const Header = ({ backgroundColor }) => {
                 </Box>
               ) : (
                 <ListItem key={item.text} button component={Link} href={item.href}>
-                  <ListItemText primary={item.text} />
+                  <ListItemText primary={item.text} sx={{ whiteSpace: 'nowrap' }} />
                 </ListItem>
               )
             ))}
@@ -141,7 +141,7 @@ const Header = ({ backgroundColor }) => {
       <Drawer anchor="right" open={isOpen} onClose={toggleSideMenu}>
         <List sx={{ width: 250 }}>
           {menuItems.map((item) => (
-            item.text === 'Products' ? (
+            item.text === '제품소개' ? (
               <div key={item.text}>
                 <ListItem button onClick={handleDrawerSubMenuToggle}>
                   <ListItemText primary={item.text} />
@@ -150,7 +150,7 @@ const Header = ({ backgroundColor }) => {
                 <Collapse in={openDrawerSubMenu} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {productSubmenuItems.map((subItem) => (
-                      <ListItem button component={Link} href={subItem.href} key={subItem.text} sx={{ pl: 4 }}>
+                      <ListItem button component={Link} href={subItem.href} key={subItem.text} sx={{ pl: 4 }} onClick={toggleSideMenu}>
                         <ListItemText primary={subItem.text} />
                       </ListItem>
                     ))}
@@ -159,7 +159,7 @@ const Header = ({ backgroundColor }) => {
               </div>
             ) : (
               <ListItem key={item.text} button component={Link} href={item.href} onClick={toggleSideMenu}>
-                <ListItemText primary={item.text} />
+                <ListItemText primary={item.text} sx={{ whiteSpace: 'nowrap' }} />
               </ListItem>
             )
           ))}
