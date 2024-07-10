@@ -1,13 +1,13 @@
 // src/app/(home)/page.js
 
 import React from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Container } from '@mui/material';
 import Latest from '@/components/Latest';
 import LatestGallery from '@/components/LatestGallery';
 
 const Home = () => {
   return (
-    <div>
+    <Container maxWidth="lg">
       <Typography variant="h4" component="h1" gutterBottom>
         Home
       </Typography>
@@ -22,7 +22,7 @@ const Home = () => {
           <LatestGallery bo_table="gallery" view_type="write" rows={4} />
         </Grid>
       </Grid>
-    </div>
+    </Container>
   );
 };
 

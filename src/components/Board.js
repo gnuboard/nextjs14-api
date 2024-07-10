@@ -1,3 +1,5 @@
+// @/components/Board.js
+
 "use client";
 
 import axios from 'axios';
@@ -20,7 +22,6 @@ const Board = ({ bo_table }) => {
         });
 
         const data = response.data;
-        // console.log('data:', data);
         if (data.board) {
           setBoard(data.board);
         } else {
@@ -35,17 +36,11 @@ const Board = ({ bo_table }) => {
   }, [bo_table]);
 
   return (
-    <div>
-      <Link href={`/board/${bo_table}`} passHref>
-        <Typography
-          variant="h6"
-          component="a"
-          sx={{ cursor: 'pointer', color: theme.palette.link.main, textDecoration: 'none', '&:hover': { color: theme.palette.link.main } }}
-        >
-          {board?.bo_subject}
-        </Typography>
-      </Link>
-    </div>
+    <Link href={`/board/${bo_table}`} passHref style={{ textDecoration: 'none' }}>
+      <Typography variant="h4" sx={{ mb: 2, fontSize: '1.5rem' }}>
+        {board?.bo_subject}
+      </Typography>
+    </Link>
   );
 };
 

@@ -42,6 +42,7 @@ const Header = ({ backgroundColor }) => {
   };
 
   const menuItems = [
+    { text: '리스트', href: '/list' },
     { text: '회사소개', href: '/about' },
     { text: '제품소개', href: '/products' },
     // { text: '쇼핑몰', href: '/shop' },

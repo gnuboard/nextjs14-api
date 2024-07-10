@@ -5,13 +5,21 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Board from './Board';
-import Grid from '@mui/material/Grid';
-import ListItem from '@mui/material/ListItem';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { truncateText, formatDate } from '@/utils/commonUtils';
+import { 
+  List, 
+  ListItem, 
+  Container, 
+  Paper,
+  Typography,
+  useMediaQuery
+} from '@mui/material';
+
+// 작성자 이니셜을 얻는 함수
+const getInitials = (name) => {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase();
+};
 
 const Latest = ({ bo_table, view_type, rows }) => {
   const [boardData, setBoardData] = useState([]);
@@ -45,35 +53,42 @@ const Latest = ({ bo_table, view_type, rows }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <div>
-      <h5>
+    <Container maxWidth="md">
+      <Paper sx={{ mt: 2, p: 2 }}>
         <Board bo_table={bo_table} />
-      </h5>
-      {boardData.length > 0 ? (
-        <div>
-          {boardData.map((board) => (
-            <React.Fragment key={board.wr_id}>
-              <ListItem alignItems="flex-start">
-                <Grid container spacing={1}>
-                  <Grid item xs={isSmallScreen ? 10 : 8}>
-                    <Typography variant="body2" component="div">
-                      {truncateText(board.wr_subject, 20)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={isSmallScreen ? 2 : 2}>
-                    <Typography variant="caption" color="textSecondary">
-                      {formatDate(board.wr_datetime)}
-                    </Typography>
-                  </Grid>
-                </Grid>
+        {boardData.length > 0 ? (
+          <List>
+            {boardData.map((board) => (
+              <ListItem 
+                key={board.wr_id} 
+                disableGutters 
+                sx={{
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  py: 1,
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                  '&:last-child': {
+                    borderBottom: 'none',
+                  },
+                }}
+              >
+                <Typography variant="body1" sx={{ flexGrow: 1, fontSize: '0.875rem' }}>
+                  {truncateText(board.wr_subject, 20)}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary', width: '80px', textAlign: 'right', fontSize: '0.75rem' }}>
+                  {formatDate(board.wr_datetime)}
+                </Typography>
               </ListItem>
-            </React.Fragment>
-          ))}
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+            ))}
+          </List>
+        ) : (
+          <Typography variant="body1" sx={{ textAlign: 'center', py: 2 }}>
+            Loading...
+          </Typography>
+        )}
+      </Paper>
+    </Container>
   );
 };
 

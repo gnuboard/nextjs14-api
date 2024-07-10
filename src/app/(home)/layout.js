@@ -7,7 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-  title: 'Opus',
+  title: 'MUI 예제',
 };
 
 const RootLayout = ({ children }) => {
