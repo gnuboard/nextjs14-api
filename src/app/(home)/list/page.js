@@ -46,7 +46,7 @@ const BoardList = () => {
   );
 
   return (
-    <Container maxWidth="md">
+    <div>
       <Paper sx={{ mt: 2, p: 2 }}>
         <Typography variant="h4" sx={{ mb: 2, fontSize: '1.5rem' }}>
           {boardName}
@@ -85,7 +85,7 @@ const BoardList = () => {
           ))}
         </List>
       </Paper>
-    </Container>
+    </div>
   );
 };
 

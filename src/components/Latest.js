@@ -53,7 +53,7 @@ const Latest = ({ bo_table, view_type, rows }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Container maxWidth="md">
+    <div>
       <Paper sx={{ mt: 2, p: 2 }}>
         <Board bo_table={bo_table} />
         {boardData.length > 0 ? (
@@ -88,7 +88,7 @@ const Latest = ({ bo_table, view_type, rows }) => {
           </Typography>
         )}
       </Paper>
-    </Container>
+    </div>
   );
 };
 

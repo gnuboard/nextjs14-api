@@ -47,7 +47,7 @@ export default function Login() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <div>
       <Box
         sx={{
           marginTop: 8,
@@ -108,6 +108,6 @@ export default function Login() {
           {error}
         </Alert>
       </Snackbar>
-    </Container>
+    </div>
   );
 }

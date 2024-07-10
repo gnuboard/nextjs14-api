@@ -4,10 +4,11 @@ import React from 'react';
 import { Typography, Grid, Container } from '@mui/material';
 import Latest from '@/components/Latest';
 import LatestGallery from '@/components/LatestGallery';
+import LatestGallerySlide from '@/components/LatestGallerySlide';
 
 const Home = () => {
   return (
-    <Container maxWidth="lg">
+    <div>
       <Typography variant="h4" component="h1" gutterBottom>
         Home
       </Typography>
@@ -19,10 +20,13 @@ const Home = () => {
           <Latest bo_table="notice" view_type="write" rows={5} />
         </Grid>
         <Grid item xs={12}>
+          <LatestGallerySlide bo_table="gallery" view_type="write" rows={4} />
+        </Grid>
+        <Grid item xs={12}>
           <LatestGallery bo_table="gallery" view_type="write" rows={4} />
         </Grid>
       </Grid>
-    </Container>
+    </div>
   );
 };
 

@@ -126,7 +126,7 @@ export default function WritePage({ params }) {
   }
 
   return (
-    <Container component="main" maxWidth="md">
+    <div>
       <Paper elevation={3} sx={{ padding: 3, backgroundColor: theme.palette.background.paper }}>
         <Typography variant="h4" gutterBottom align="center">
           {boardConfig.board.bo_subject} 글쓰기
@@ -401,6 +401,6 @@ export default function WritePage({ params }) {
           </Button>
         </Box>
       </Paper>
-    </Container>
+    </div>
   );
 }

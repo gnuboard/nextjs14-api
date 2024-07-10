@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 export default function Contact() {
   return (
-    <Container component="main" maxWidth="xs">
+    <div>
       <Box
         sx={{
           marginTop: 8,
@@ -75,6 +75,6 @@ export default function Contact() {
           </Button>
         </Paper>
       </Box>
-    </Container>
+    </div>
   );
 }

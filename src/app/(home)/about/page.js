@@ -51,7 +51,7 @@ const CompanyPage = () => {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
+    <div>
       <Box sx={{ mb: 6 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           (주)에스아이알소프트
@@ -84,7 +84,7 @@ const CompanyPage = () => {
       </Box>
       
       <Box ref={mapElement} sx={{ width: '100%', height: '400px', borderRadius: '8px', overflow: 'hidden' }}></Box>
-    </Container>
+    </div>
   );
 };
 

@@ -60,7 +60,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
   }, [bo_table, view_type, rows]);
 
   return (
-    <Container maxWidth="lg">
+    <div>
       <Paper sx={{ mt: 2, p: 2, overflow: 'hidden' }}>
         <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold', marginBottom: theme.spacing(3) }}>
           <Board bo_table={bo_table} />
@@ -112,7 +112,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           </Typography>
         )}
       </Paper>
-    </Container>
+    </div>
   );
 };
 
