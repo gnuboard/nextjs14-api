@@ -109,6 +109,9 @@ export const SignupForm = () => {
   });
 
   const [isSignupLoading, setIsSignupLoading] = useState(false);
+  const [idError, setIdError] = useState('');
+  const [nickError, setNickError] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -122,6 +125,9 @@ export const SignupForm = () => {
     e.preventDefault();
     // Signup request
     setIsSignupLoading(true);
+    setIdError('');
+    setNickError('');
+    setEmailError('');
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/members`, formData)
       if (response.status === 201) {
@@ -138,7 +144,14 @@ export const SignupForm = () => {
             alert(detail.msg);
           }
         } else {
-          alert(error.response.data.detail);
+          const errorMsg = error.response.data.detail;
+          if (errorMsg == "이미 가입된 아이디입니다.") {
+            setIdError(errorMsg);
+          } else if (errorMsg == "이미 존재하는 닉네임입니다.") {
+            setNickError(errorMsg);
+          } else if (errorMsg == "이미 가입된 이메일입니다.") {
+            setEmailError(errorMsg);
+          }
         }
       } else {
         alert(error);
@@ -185,6 +198,7 @@ export const SignupForm = () => {
                 value={formData.mb_id}
                 onChange={handleChange}
               />
+              {idError && <Typography color="error">{idError}</Typography>}
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -238,6 +252,7 @@ export const SignupForm = () => {
                   value={formData.mb_nick}
                   onChange={handleChange}
                 />
+                {nickError && <Typography color="error">{nickError}</Typography>}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -250,6 +265,7 @@ export const SignupForm = () => {
                   value={formData.mb_email}
                   onChange={handleChange}
                 />
+                {emailError && <Typography color="error">{emailError}</Typography>}
               </Grid>
             </Grid>
           </Box>
