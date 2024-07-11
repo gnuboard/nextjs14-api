@@ -75,36 +75,36 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
             <ImageList variant="quilted" cols={getColumns()} gap={16} sx={{ overflow: 'visible' }}>
               {boardData.map((board) => (
                 <Link href={`/board/${bo_table}/${board.wr_id}`}>
-                <ImageListItem 
-                  key={board.wr_id} 
-                  sx={{
-                    overflow: 'hidden',
-                    borderRadius: '12px',
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      zIndex: 1,
-                    },
-                  }}
-                >
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${board.thumbnail.src}`}
-                    alt={truncateText(board.wr_subject, 20)}
-                    loading="lazy"
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover'
-                    }}
-                  />
-                  <ImageListItemBar
-                    title={truncateText(board.wr_subject, 20)}
-                    subtitle={formatDate(board.wr_datetime)}
+                  <ImageListItem 
+                    key={board.wr_id} 
                     sx={{
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                      overflow: 'hidden',
+                      borderRadius: '12px',
+                      transition: 'transform 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        zIndex: 1,
+                      },
                     }}
-                  />
-                </ImageListItem>
+                  >
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${board.thumbnail.src}`}
+                      alt={truncateText(board.wr_subject, 20)}
+                      loading="lazy"
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <ImageListItemBar
+                      title={truncateText(board.wr_subject, 20)}
+                      subtitle={formatDate(board.wr_datetime)}
+                      sx={{
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                      }}
+                    />
+                  </ImageListItem>
                 </Link>
               ))}
             </ImageList>

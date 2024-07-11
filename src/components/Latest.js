@@ -61,27 +61,27 @@ const Latest = ({ bo_table, view_type, rows }) => {
           <List>
             {boardData.map((board) => (
               <Link href={`/board/${bo_table}/${board.wr_id}`}>
-              <ListItem 
-                key={board.wr_id} 
-                disableGutters 
-                sx={{
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  py: 1,
-                  borderBottom: `1px solid ${theme.palette.divider}`,
-                  '&:last-child': {
-                    borderBottom: 'none',
-                  },
-                }}
-              >
-                <Typography variant="body1" sx={{ flexGrow: 1, fontSize: '0.875rem' }}>
-                  {truncateText(board.wr_subject, 20)}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', width: '80px', textAlign: 'right', fontSize: '0.75rem' }}>
-                  {formatDate(board.wr_datetime)}
-                </Typography>
-              </ListItem>
+                <ListItem 
+                  key={board.wr_id} 
+                  disableGutters 
+                  sx={{
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    py: 1,
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    '&:last-child': {
+                      borderBottom: 'none',
+                    },
+                  }}
+                >
+                  <Typography variant="body1" sx={{ flexGrow: 1, fontSize: '0.875rem' }}>
+                    {truncateText(board.wr_subject, 20)}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', width: '80px', textAlign: 'right', fontSize: '0.75rem' }}>
+                    {formatDate(board.wr_datetime)}
+                  </Typography>
+                </ListItem>
               </Link>
             ))}
           </List>
