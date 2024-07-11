@@ -21,6 +21,7 @@ import Board from '@/components/Board';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Link from 'next/link';
 
 const CustomArrow = ({ direction, onClick }) => (
   <IconButton
@@ -117,6 +118,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           <Box sx={{ margin: '0 20px' }}>
             <Slider {...sliderSettings}>
               {boardData.map((board) => (
+                <Link href={`/board/${bo_table}/${board.wr_id}`}>
                 <Box key={board.wr_id} sx={{ padding: '0 16px' }}>
                   <Box
                     sx={{
@@ -159,6 +161,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
                     </Box>
                   </Box>
                 </Box>
+                </Link>
               ))}
             </Slider>
           </Box>

@@ -15,6 +15,7 @@ import {
   Typography,
   useMediaQuery
 } from '@mui/material';
+import Link from 'next/link';
 
 // 작성자 이니셜을 얻는 함수
 const getInitials = (name) => {
@@ -59,6 +60,7 @@ const Latest = ({ bo_table, view_type, rows }) => {
         {boardData.length > 0 ? (
           <List>
             {boardData.map((board) => (
+              <Link href={`/board/${bo_table}/${board.wr_id}`}>
               <ListItem 
                 key={board.wr_id} 
                 disableGutters 
@@ -80,6 +82,7 @@ const Latest = ({ bo_table, view_type, rows }) => {
                   {formatDate(board.wr_datetime)}
                 </Typography>
               </ListItem>
+              </Link>
             ))}
           </List>
         ) : (

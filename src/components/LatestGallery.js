@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { truncateText, formatDate } from '@/utils/commonUtils';
 import Board from '@/components/Board';
+import Link from 'next/link';
 
 const LatestGallery = ({ bo_table, view_type, rows }) => {
   const [boardData, setBoardData] = useState([]);
@@ -73,6 +74,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           <Box sx={{ padding: '2.5%' }}>
             <ImageList variant="quilted" cols={getColumns()} gap={16} sx={{ overflow: 'visible' }}>
               {boardData.map((board) => (
+                <Link href={`/board/${bo_table}/${board.wr_id}`}>
                 <ImageListItem 
                   key={board.wr_id} 
                   sx={{
@@ -103,6 +105,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
                     }}
                   />
                 </ImageListItem>
+                </Link>
               ))}
             </ImageList>
           </Box>
