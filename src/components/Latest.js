@@ -36,8 +36,8 @@ const Latest = ({ bo_table, view_type, rows }) => {
         });
 
         const data = response.data;
-        if (data[bo_table] && Array.isArray(data[bo_table])) {
-          setBoardData(data[bo_table]);
+        if (Array.isArray(data)) {
+          setBoardData(data);
         } else {
           console.error('API response data is not in the expected format:', data);
         }
