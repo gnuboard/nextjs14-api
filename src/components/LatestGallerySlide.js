@@ -164,7 +164,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           </Box>
         ) : (
           <Typography variant="body1" sx={{ textAlign: 'center', marginTop: theme.spacing(4) }}>
-            No images available.
+            로딩중이거나 데이터가 없습니다.
           </Typography>
         )}
       </Paper>

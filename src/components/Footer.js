@@ -3,11 +3,11 @@
 import React from 'react';
 import { Box, Typography, Switch } from '@mui/material';
 import { useTheme } from '@mui/material/styles'; // useTheme 훅을 @mui/material/styles에서 가져옴
-import { useTheme as useCustomTheme } from '@/components/ThemeContext'; // ThemeContext에서 테마 관련 훅 import
+import { useTheme as useCustomTheme } from '@/components/ThemeProvider'; // ThemeProvider에서 테마 관련 훅 import
 
 const Footer = () => {
   const theme = useTheme(); // MUI의 useTheme 훅을 사용하여 theme 가져오기
-  const { isDarkMode, toggleTheme } = useCustomTheme(); // 커스텀 ThemeContext에서 테마 상태와 토글 함수 가져오기
+  const { isDarkMode, toggleTheme } = useCustomTheme(); // 커스텀 ThemeProvider에서 테마 상태와 토글 함수 가져오기
 
   return (
     <Box
