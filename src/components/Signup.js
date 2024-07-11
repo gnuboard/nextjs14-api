@@ -8,31 +8,31 @@ import {
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export const Aggrement = ({ onCheckboxChange }) => {
-  const [policySignup, setPolicySignup] = useState(false);
-  const [policyPrivacy, setPolicyPrivacy] = useState(false);
-  const [policyAll, setPolicyAll] = useState(false);
-
+export const Aggrement = ({
+  allAgreed, setAllAgreed,
+  policySignup, setPolicySignup,
+  policyPrivacy, setPolicyPrivacy,
+}) => {
   const toggleSignup = (e) => {
     setPolicySignup(e.target.checked);
     if (e.target.checked && policyPrivacy) {
-      setPolicyAll(true);
+      setAllAgreed(true);
     } else {
-      setPolicyAll(false);
+      setAllAgreed(false);
     }
   }
 
   const togglePrivacy = (e) => {
     setPolicyPrivacy(e.target.checked);
     if (e.target.checked && policySignup) {
-      setPolicyAll(true);
+      setAllAgreed(true);
     } else {
-      setPolicyAll(false);
+      setAllAgreed(false);
     }
   }
 
   const toggleAll = (e) => {
-    setPolicyAll(e.target.checked);
+    setAllAgreed(e.target.checked);
     if (e.target.checked) {
       setPolicySignup(true);
       setPolicyPrivacy(true);
@@ -90,7 +90,7 @@ export const Aggrement = ({ onCheckboxChange }) => {
       </Box>
       <FormGroup>
         <FormControlLabel control={<Checkbox checked={policyPrivacy} onChange={togglePrivacy} />} label="개인정보처리방침의 내용에 동의합니다." />
-        <FormControlLabel control={<Checkbox />} checked={policyAll} onChange={(event) => {toggleAll(event);onCheckboxChange(event);}} label="위 내용에 모두 동의합니다." />
+        <FormControlLabel control={<Checkbox />} checked={allAgreed} onChange={(event) => {toggleAll(event)}} label="위 내용에 모두 동의합니다." />
       </FormGroup>
     </Box>
   )
