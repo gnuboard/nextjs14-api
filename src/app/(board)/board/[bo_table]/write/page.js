@@ -10,6 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import { useAuth } from '@/components/AuthContext';
 import { useBoardConfig } from '@/hooks/useBoardConfig';
 import MenuItem from '@mui/material/MenuItem';
+import FileUpload from '@/components/FileUpload';
 
 async function submitWrite(bo_table, formData, isLogin) {
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes`;
@@ -53,6 +54,7 @@ export default function WritePage({ params }) {
   const theme = useTheme();
   const { isLogin, memberInfo } = useAuth();
   const { boardConfig, loading, error: boardError } = useBoardConfig(bo_table);
+  let wr_id = null;
   // console.log(boardConfig);
 
   const [formValues, setFormValues] = useState({
@@ -75,6 +77,8 @@ export default function WritePage({ params }) {
   });
 
   const [error, setError] = useState('');
+  const [file1, setFile1] = useState(null);
+  const [file2, setFile2] = useState(null);
 
   useEffect(() => {
     if (memberInfo) {
@@ -112,10 +116,40 @@ export default function WritePage({ params }) {
     }
   
     try {
-      await submitWrite(bo_table, formValues, isLogin);
-      router.push(`/board/${bo_table}`);
+      const response = await submitWrite(bo_table, formValues, isLogin);
+
+      // 게시글이 작성된 후 wr_id를 받아서 file upload를 진행, upload할 파일이 없으면 게시글로 이동
+      if (response.result === "created") {
+        wr_id = response.wr_id;
+        const fileUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}/files`;
+        const formData = new FormData();
+        file1 && formData.append('file1', file1);
+        file2 && formData.append('file2', file2);
+        if (file1 || file2) {
+          const fileResponse = await axios.post(fileUrl, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          });
+          if (fileResponse.data.result !== "uploaded") {
+            alert('게시글 작성 후 파일 업로드 중 오류가 발생했습니다.');
+            console.log(fileResponse)
+          }
+        }
+      } else {
+        alert(response);
+        console.log(response);
+      }
+      router.push(`/board/${bo_table}/${wr_id}`);
     } catch (error) {
       console.error('Error submitting write:', error);
+
+      // 게시글 작성은 성공했지만 파일 업로드 중 오류가 발생한 경우는 alert후 게시글로 이동
+      if (wr_id) {
+        alert('게시글 작성 후 파일 업로드 중 오류가 발생했습니다.');
+        router.push(`/board/${bo_table}/${wr_id}`);
+      }
+
       if (error.response && error.response.data && error.response.data.detail) {
         // detail이 배열인 경우 모든 에러 메시지를 결합
         if (Array.isArray(error.response.data.detail)) {
@@ -403,6 +437,20 @@ export default function WritePage({ params }) {
                 label="댓글 사용 여부"
               />
             </Grid>
+            {
+              boardConfig.board.bo_upload_level == 1 || boardConfig.board.bo_upload_level <= memberInfo?.mb_level 
+              ? (
+                <>
+                <Grid item xs={12}>
+                <FileUpload label="첨부파일 1" onFileSelect={(file) => setFile1(file)} />
+                </Grid>
+                <Grid item xs={12}>
+                  <FileUpload label="첨부파일 2" onFileSelect={(file) => setFile2(file)} />
+                </Grid>
+                </>
+                )
+              : null
+            }
           </Grid>
           {error && <Typography color="error" align="center" sx={{ mt: 2 }}>{error}</Typography>}
           <Button
