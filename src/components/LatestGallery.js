@@ -74,9 +74,8 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           <Box sx={{ padding: '2.5%' }}>
             <ImageList variant="quilted" cols={getColumns()} gap={16} sx={{ overflow: 'visible' }}>
               {boardData.map((board) => (
-                <Link href={`/board/${bo_table}/${board.wr_id}`}>
+                <Link key={board.wr_id} href={`/board/${bo_table}/${board.wr_id}`}>
                   <ImageListItem 
-                    key={board.wr_id} 
                     sx={{
                       overflow: 'hidden',
                       borderRadius: '12px',

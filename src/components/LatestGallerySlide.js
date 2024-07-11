@@ -118,8 +118,8 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           <Box sx={{ margin: '0 20px' }}>
             <Slider {...sliderSettings}>
               {boardData.map((board) => (
-                <Link href={`/board/${bo_table}/${board.wr_id}`}>
-                  <Box key={board.wr_id} sx={{ padding: '0 16px' }}>
+                <Link key={board.wr_id} href={`/board/${bo_table}/${board.wr_id}`}>
+                  <Box sx={{ padding: '0 16px' }}>
                     <Box
                       sx={{
                         position: 'relative',

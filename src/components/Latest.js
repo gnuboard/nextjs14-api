@@ -60,9 +60,8 @@ const Latest = ({ bo_table, view_type, rows }) => {
         {boardData.length > 0 ? (
           <List>
             {boardData.map((board) => (
-              <Link href={`/board/${bo_table}/${board.wr_id}`}>
+              <Link key={board.wr_id} href={`/board/${bo_table}/${board.wr_id}`}>
                 <ListItem 
-                  key={board.wr_id} 
                   disableGutters 
                   sx={{
                     display: 'flex', 
