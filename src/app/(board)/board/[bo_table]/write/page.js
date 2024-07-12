@@ -150,7 +150,9 @@ export default function WritePage({ params }) {
         router.push(`/board/${bo_table}/${wr_id}`);
       }
 
-      if (error.response && error.response.data && error.response.data.detail) {
+      if (error.response.status === 429) {
+        setError(error.response.data.message);
+      } else if (error.response && error.response.data && error.response.data.detail) {
         // detail이 배열인 경우 모든 에러 메시지를 결합
         if (Array.isArray(error.response.data.detail)) {
           const errorMessages = error.response.data.detail.map(err => err.msg).join(', ');
