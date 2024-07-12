@@ -47,19 +47,23 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
 
   async function submitComment(bo_table, wr_id, formData) {
     const token = sessionStorage.getItem('accessToken');
+    const dataToSend = {
+      ...formData,
+      wr_option: formData.wr_secret_checked ? 'secret' : 'html1',
+    }
     let headers = {'Content-Type': 'application/json'}
 
-    if (!formData.wr_content) {
+    if (!dataToSend.wr_content) {
       setError('댓글을 입력해주세요.');
       return;
     }
 
     if (!isLogin) {
-      if (!commentFormValue.wr_name) {
+      if (!dataToSend.wr_name) {
         setError('작성자 이름을 입력해주세요.');
         return;
       }
-      if(!commentFormValue.wr_password) {
+      if(!dataToSend.wr_password) {
         setError('비밀번호를 입력해주세요.');
         return;
       }
@@ -71,7 +75,7 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
       setCommentLoading(true);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}/comments`,
-        formData,
+        dataToSend,
         {headers: headers},
       );
       setCommentFormValue({
