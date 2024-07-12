@@ -93,7 +93,7 @@ export default function ListWritesPage({ params }) {
   };
 
   const handleWriteClick = () => {
-    router.push(`/board/write/${bo_table}`);
+    router.push(`/board/${bo_table}/write`);
   };
 
   return (

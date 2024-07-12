@@ -1,12 +1,17 @@
 // src/app/(authentication)/signup/page.js
+'use client';
 
-import React from 'react';
-import { 
-  Container, 
-  Card, CardContent, Checkbox, FormControlLabel, FormGroup, Button, Typography, Paper, Box, Divider } from '@mui/material';
-import Image from 'next/image';
+import React, { useState } from 'react';
+import { Container, Button, Paper, Box } from '@mui/material';
+import { Aggrement, SignupForm } from '../../../components/Signup';
 
 export default function Contact() {
+  const [allAgreed, setAllAgreed] = useState(false);
+  const [policySignup, setPolicySignup] = useState(false);
+  const [policyPrivacy, setPolicyPrivacy] = useState(false);
+  const [togglePressed, setTogglePressed] = useState(false);
+  const toggleForm = () => {setTogglePressed(!togglePressed)};
+
   return (
     <div>
       <Box
