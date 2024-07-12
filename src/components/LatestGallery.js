@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { truncateText, formatDate } from '@/utils/commonUtils';
 import Board from '@/components/Board';
+import Link from 'next/link';
 
 const LatestGallery = ({ bo_table, view_type, rows }) => {
   const [boardData, setBoardData] = useState([]);
@@ -44,8 +45,8 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
         });
 
         const data = response.data;
-        if (data[bo_table] && Array.isArray(data[bo_table])) {
-          setBoardData(data[bo_table]);
+        if (Array.isArray(data)) {
+          setBoardData(data);
         } else {
           console.error('API response data is not in the expected format:', data);
         }
@@ -73,36 +74,37 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           <Box sx={{ padding: '2.5%' }}>
             <ImageList variant="quilted" cols={getColumns()} gap={16} sx={{ overflow: 'visible' }}>
               {boardData.map((board) => (
-                <ImageListItem 
-                  key={board.wr_id} 
-                  sx={{
-                    overflow: 'hidden',
-                    borderRadius: '12px',
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      zIndex: 1,
-                    },
-                  }}
-                >
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${board.thumbnail.src}`}
-                    alt={truncateText(board.wr_subject, 20)}
-                    loading="lazy"
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover'
-                    }}
-                  />
-                  <ImageListItemBar
-                    title={truncateText(board.wr_subject, 20)}
-                    subtitle={formatDate(board.wr_datetime)}
+                <Link key={board.wr_id} href={`/board/${bo_table}/${board.wr_id}`}>
+                  <ImageListItem 
                     sx={{
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                      overflow: 'hidden',
+                      borderRadius: '12px',
+                      transition: 'transform 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        zIndex: 1,
+                      },
                     }}
-                  />
-                </ImageListItem>
+                  >
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${board.thumbnail.src}`}
+                      alt={truncateText(board.wr_subject, 20)}
+                      loading="lazy"
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <ImageListItemBar
+                      title={truncateText(board.wr_subject, 20)}
+                      subtitle={formatDate(board.wr_datetime)}
+                      sx={{
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                      }}
+                    />
+                  </ImageListItem>
+                </Link>
               ))}
             </ImageList>
           </Box>
