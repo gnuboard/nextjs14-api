@@ -99,31 +99,33 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
         }}
       />
       <Box sx={{mt: 5}}>
-      <Box sx={{display: "flex", flexWrap: "wrap", gap: "4%"}}>
-        <TextField
-          margin="normal"
-          name="wr_name"
-          label="작성자 이름"
-          value={commentFormValue.wr_name}
-          onChange={(e) => setCommentFormValue({
-            ...commentFormValue,
-            wr_name: e.target.value
-          })}
-          sx={{ width: "48%"}}
-        />
-        <TextField
-          margin="normal"
-          name="wr_password"
-          label="비밀번호"
-          type="password"
-          value={commentFormValue.wr_password}
-          onChange={(e) => setCommentFormValue({
-            ...commentFormValue,
-            wr_password: e.target.value
-          })}
-          sx={{ width: "48%"}}
-        />
-      </Box>
+        {!isLogin && (
+          <Box sx={{display: "flex", flexWrap: "wrap", gap: "4%"}}>
+          <TextField
+            margin="normal"
+            name="wr_name"
+            label="작성자 이름"
+            value={commentFormValue.wr_name}
+            onChange={(e) => setCommentFormValue({
+              ...commentFormValue,
+              wr_name: e.target.value
+            })}
+            sx={{ width: "48%"}}
+          />
+          <TextField
+            margin="normal"
+            name="wr_password"
+            label="비밀번호"
+            type="password"
+            value={commentFormValue.wr_password}
+            onChange={(e) => setCommentFormValue({
+              ...commentFormValue,
+              wr_password: e.target.value
+            })}
+            sx={{ width: "48%"}}
+          />
+        </Box>
+        )}
       {error && <Typography color="error" align="center" sx={{ mt: 2 }}>{error}</Typography>}
       <Box
         sx={{
