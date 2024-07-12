@@ -293,7 +293,7 @@ export default function WritePage({ params }) {
               </Grid>
             </>
             )}
-            {(memberInfo?.mb_level >= boardConfig.board.bo_link_level) && (
+            {(boardConfig.board.bo_link_level == 1 || memberInfo?.mb_level >= boardConfig.board.bo_link_level) && (
               <>
                 <Grid item xs={12} sm={6}>
                   <TextField
