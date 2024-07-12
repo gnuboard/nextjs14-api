@@ -33,7 +33,7 @@ export default function Comment({ index, comment }) {
   );
 }
 
-export function CommentForm() {
+export function CommentForm({ commentLoading, setCommentLoading }) {
   const { bo_table, wr_id } = useParams();
   const { isLogin } = useAuth();
   const [error, setError] = useState('');
@@ -67,11 +67,13 @@ export function CommentForm() {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
+    setCommentLoading(true);
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}/comments`,
       formData,
       {headers: headers},
     );
+    setCommentLoading(false);
     return response.data;
   }
 
@@ -150,6 +152,7 @@ export function CommentForm() {
           variant="contained"
           color="primary"
           size="small"
+          disabled={commentLoading}
           onClick={() => submitComment(bo_table, wr_id, commentFormValue)}
         >
           댓글등록

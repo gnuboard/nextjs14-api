@@ -20,6 +20,7 @@ function WriteDetailsPage() {
   const searchParams = useSearchParams();
   const [write, setWrite] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [commentLoading, setCommentLoading] = useState(false);
 
   useEffect(() => {
     if (bo_table && wr_id) {
@@ -33,7 +34,7 @@ function WriteDetailsPage() {
           setLoading(false);
         });
     }
-  }, [bo_table, wr_id]);
+  }, [bo_table, wr_id, commentLoading]);
 
   const handleNavigation = (path) => {
     const query = searchParams.toString();
@@ -91,7 +92,10 @@ function WriteDetailsPage() {
             comment={comment}
           />
         ))}
-        <CommentForm />
+        <CommentForm
+          commentLoading={commentLoading}
+          setCommentLoading={setCommentLoading} 
+        />
       </Paper>
     </Box>
   );
