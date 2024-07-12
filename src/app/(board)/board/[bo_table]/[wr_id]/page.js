@@ -7,7 +7,7 @@ import { Typography, Box, CircularProgress, Paper, Avatar, Grid, Button, ButtonG
 import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { deepPurple } from '@mui/material/colors';
-import Comment from '@/components/Comment';
+import Comment, { CommentForm } from '@/components/Comment';
 
 async function fetchWriteById(bo_table, wr_id) {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`);
@@ -91,6 +91,7 @@ function WriteDetailsPage() {
             comment={comment}
           />
         ))}
+        <CommentForm />
       </Paper>
     </Box>
   );
