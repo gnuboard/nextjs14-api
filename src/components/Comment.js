@@ -67,14 +67,32 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    setCommentLoading(true);
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}/comments`,
-      formData,
-      {headers: headers},
-    );
-    setCommentLoading(false);
-    return response.data;
+    try {
+      setCommentLoading(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}/comments`,
+        formData,
+        {headers: headers},
+      );
+      setCommentFormValue({
+        wr_content: '',
+        wr_name: '',
+        wr_password: '',
+        wr_secret_checked: false,
+        comment_id: 0,
+      });
+      setError('');
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      if (error.response.status === 429) {
+        setError(error.response.data.message);
+      } else {
+        setError('댓글 등록에 실패했습니다.');
+      }
+    } finally {
+      setCommentLoading(false);
+    }
   }
 
   return (
