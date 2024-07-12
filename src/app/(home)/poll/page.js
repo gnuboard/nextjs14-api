@@ -158,8 +158,15 @@ const Poll = () => {
     const { po_id, pc_id } = commentToDelete;
 
     try {
+      const token = localStorage.getItem('accessToken'); // Adjust this line based on where you store your token
       const api_url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/polls/${po_id}/etc/${pc_id}`;
-      await axios.delete(api_url);
+      
+      await axios.delete(api_url, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
       console.log('Comment deleted:', api_url); // Debugging
       setDeleteDialogOpen(false);
       setCommentToDelete(null);

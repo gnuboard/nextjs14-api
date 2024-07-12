@@ -25,7 +25,7 @@ async function submitWrite(bo_table, formData, isLogin) {
   };
 
   try {
-    const token = sessionStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken');
     let headers = {}
     if (isLogin) {
       headers = {
