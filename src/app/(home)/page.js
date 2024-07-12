@@ -5,6 +5,7 @@ import { Typography, Grid, Container } from '@mui/material';
 import Latest from '@/components/Latest';
 import LatestGallery from '@/components/LatestGallery';
 import LatestGallerySlide from '@/components/LatestGallerySlide';
+import CookieConsentPopup from '@/components/CookieConcentPopup';
 
 const Home = () => {
   return (
@@ -26,6 +27,7 @@ const Home = () => {
           <LatestGallery bo_table="gallery" view_type="write" rows={4} />
         </Grid>
       </Grid>
+      <CookieConsentPopup />
     </div>
   );
 };
