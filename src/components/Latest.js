@@ -15,6 +15,7 @@ import {
   Typography,
   useMediaQuery
 } from '@mui/material';
+import Link from 'next/link';
 
 // 작성자 이니셜을 얻는 함수
 const getInitials = (name) => {
@@ -36,8 +37,8 @@ const Latest = ({ bo_table, view_type, rows }) => {
         });
 
         const data = response.data;
-        if (data[bo_table] && Array.isArray(data[bo_table])) {
-          setBoardData(data[bo_table]);
+        if (Array.isArray(data)) {
+          setBoardData(data);
         } else {
           console.error('API response data is not in the expected format:', data);
         }
@@ -59,27 +60,28 @@ const Latest = ({ bo_table, view_type, rows }) => {
         {boardData.length > 0 ? (
           <List>
             {boardData.map((board) => (
-              <ListItem 
-                key={board.wr_id} 
-                disableGutters 
-                sx={{
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  py: 1,
-                  borderBottom: `1px solid ${theme.palette.divider}`,
-                  '&:last-child': {
-                    borderBottom: 'none',
-                  },
-                }}
-              >
-                <Typography variant="body1" sx={{ flexGrow: 1, fontSize: '0.875rem' }}>
-                  {truncateText(board.wr_subject, 20)}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', width: '80px', textAlign: 'right', fontSize: '0.75rem' }}>
-                  {formatDate(board.wr_datetime)}
-                </Typography>
-              </ListItem>
+              <Link key={board.wr_id} href={`/board/${bo_table}/${board.wr_id}`}>
+                <ListItem 
+                  disableGutters 
+                  sx={{
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    py: 1,
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    '&:last-child': {
+                      borderBottom: 'none',
+                    },
+                  }}
+                >
+                  <Typography variant="body1" sx={{ flexGrow: 1, fontSize: '0.875rem' }}>
+                    {truncateText(board.wr_subject, 20)}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', width: '80px', textAlign: 'right', fontSize: '0.75rem' }}>
+                    {formatDate(board.wr_datetime)}
+                  </Typography>
+                </ListItem>
+              </Link>
             ))}
           </List>
         ) : (

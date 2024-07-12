@@ -21,6 +21,7 @@ import Board from '@/components/Board';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Link from 'next/link';
 
 const CustomArrow = ({ direction, onClick }) => (
   <IconButton
@@ -64,8 +65,8 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
         });
 
         const data = response.data;
-        if (data[bo_table] && Array.isArray(data[bo_table])) {
-          setBoardData(data[bo_table]);
+        if (Array.isArray(data)) {
+          setBoardData(data);
         } else {
           console.error('API response data is not in the expected format:', data);
         }
@@ -117,48 +118,50 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
           <Box sx={{ margin: '0 20px' }}>
             <Slider {...sliderSettings}>
               {boardData.map((board) => (
-                <Box key={board.wr_id} sx={{ padding: '0 16px' }}>
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      overflow: 'hidden',
-                      borderRadius: '12px',
-                      '&:hover img': {
-                        transform: 'scale(1.05)',
-                      },
-                      margin: '0 8px',
-                      height: '250px', // 고정 높이 설정
-                    }}
-                  >
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${board.thumbnail.src}`}
-                      alt={truncateText(board.wr_subject, 20)}
-                      style={{ 
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        transition: 'transform 0.3s ease-in-out',
-                      }}
-                    />
+                <Link key={board.wr_id} href={`/board/${bo_table}/${board.wr_id}`}>
+                  <Box sx={{ padding: '0 16px' }}>
                     <Box
                       sx={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-                        padding: '20px 10px 10px',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        borderRadius: '12px',
+                        '&:hover img': {
+                          transform: 'scale(1.05)',
+                        },
+                        margin: '0 8px',
+                        height: '250px', // 고정 높이 설정
                       }}
                     >
-                      <Typography variant="subtitle1" sx={{ color: 'white' }}>
-                        {truncateText(board.wr_subject, 20)}
-                      </Typography>
-                      <Typography variant="caption" sx={{ color: 'white' }}>
-                        {formatDate(board.wr_datetime)}
-                      </Typography>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${board.thumbnail.src}`}
+                        alt={truncateText(board.wr_subject, 20)}
+                        style={{ 
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          transition: 'transform 0.3s ease-in-out',
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                          padding: '20px 10px 10px',
+                        }}
+                      >
+                        <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                          {truncateText(board.wr_subject, 20)}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'white' }}>
+                          {formatDate(board.wr_datetime)}
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
+                </Link>
               ))}
             </Slider>
           </Box>
