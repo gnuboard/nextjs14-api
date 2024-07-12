@@ -7,6 +7,7 @@ import { Typography, Box, CircularProgress, Paper, Avatar, Grid, Button, ButtonG
 import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { deepPurple } from '@mui/material/colors';
+import Comment from '@/components/Comment';
 
 async function fetchWriteById(bo_table, wr_id) {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`);
@@ -83,6 +84,13 @@ function WriteDetailsPage() {
           <Button onClick={() => handleNavigation(`/board/${bo_table}/previous/${wr_id}`)}>이전글</Button>
           <Button onClick={() => handleNavigation(`/board/${bo_table}/next/${wr_id}`)}>다음글</Button>
         </ButtonGroup>
+        {write?.comments.map((comment, index) => (
+          <Comment 
+            key={index}
+            index={index}
+            comment={comment}
+          />
+        ))}
       </Paper>
     </Box>
   );
