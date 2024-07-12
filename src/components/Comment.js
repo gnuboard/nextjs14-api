@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'next/navigation';
 import {
   Typography, Avatar, Stack, Box, Divider,
   TextField, Checkbox, FormControlLabel, Button
 } from "@mui/material";
 import { SubdirectoryArrowRight } from "@mui/icons-material";
 import { get_img_url } from '@/utils/commonUtils';
+import { useAuth } from '@/components/AuthContext';
 
 export default function Comment({ index, comment }) {
   return (
@@ -31,7 +34,47 @@ export default function Comment({ index, comment }) {
 }
 
 export function CommentForm() {
-  
+  const { bo_table, wr_id } = useParams();
+  const { isLogin } = useAuth();
+  const [error, setError] = useState('');
+  const [commentFormValue, setCommentFormValue] = useState({
+    wr_content: '',
+    wr_name: '',
+    wr_password: '',
+    wr_secret_checked: false,
+    comment_id: 0,
+  });
+
+  async function submitComment(bo_table, wr_id, formData) {
+    const token = sessionStorage.getItem('accessToken');
+    let headers = {'Content-Type': 'application/json'}
+
+    if (!formData.wr_content) {
+      setError('댓글을 입력해주세요.');
+      return;
+    }
+
+    if (!isLogin) {
+      if (!commentFormValue.wr_name) {
+        setError('작성자 이름을 입력해주세요.');
+        return;
+      }
+      if(!commentFormValue.wr_password) {
+        setError('비밀번호를 입력해주세요.');
+        return;
+      }
+    } else {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}/comments`,
+      formData,
+      {headers: headers},
+    );
+    return response.data;
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       <TextField
@@ -42,19 +85,50 @@ export function CommentForm() {
         required
         name="variables.wr_content"
         placeholder="댓글을 입력하세요..."
+        value={commentFormValue.wr_content}
+        onChange={(e) => setCommentFormValue({
+          ...commentFormValue,
+          wr_content: e.target.value
+        })}
         sx={{
           '& .MuiOutlinedInput-root': {
             padding: '8px 14px',
           },
         }}
       />
+      <Box sx={{mt: 5}}>
+      <Box sx={{display: "flex", flexWrap: "wrap", gap: "4%"}}>
+        <TextField
+          margin="normal"
+          name="wr_name"
+          label="작성자 이름"
+          value={commentFormValue.wr_name}
+          onChange={(e) => setCommentFormValue({
+            ...commentFormValue,
+            wr_name: e.target.value
+          })}
+          sx={{ width: "48%"}}
+        />
+        <TextField
+          margin="normal"
+          name="wr_password"
+          label="비밀번호"
+          type="password"
+          value={commentFormValue.wr_password}
+          onChange={(e) => setCommentFormValue({
+            ...commentFormValue,
+            wr_password: e.target.value
+          })}
+          sx={{ width: "48%"}}
+        />
+      </Box>
+      {error && <Typography color="error" align="center" sx={{ mt: 2 }}>{error}</Typography>}
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'center',
           gap: 2,
-          mt: 5
         }}
       >
         <FormControlLabel
@@ -62,6 +136,11 @@ export function CommentForm() {
             <Checkbox
               name="variables.wr_secret_checked"
               size="small"
+              checked={commentFormValue.wr_secret_checked}
+              onChange={(e) => setCommentFormValue({
+                ...commentFormValue,
+                wr_secret_checked: e.target.checked
+              })}
             />
           }
           label={<span style={{ fontSize: '0.875rem' }}>비밀댓글</span>}
@@ -71,9 +150,11 @@ export function CommentForm() {
           variant="contained"
           color="primary"
           size="small"
+          onClick={() => submitComment(bo_table, wr_id, commentFormValue)}
         >
           댓글등록
         </Button>
+      </Box>
       </Box>
     </Box>
   );
