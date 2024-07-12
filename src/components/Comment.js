@@ -126,40 +126,40 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
           />
         </Box>
         )}
-      {error && <Typography color="error" align="center" sx={{ mt: 2 }}>{error}</Typography>}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          gap: 2,
-        }}
-      >
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="variables.wr_secret_checked"
-              size="small"
-              checked={commentFormValue.wr_secret_checked}
-              onChange={(e) => setCommentFormValue({
-                ...commentFormValue,
-                wr_secret_checked: e.target.checked
-              })}
-            />
-          }
-          label={<span style={{ fontSize: '0.875rem' }}>비밀댓글</span>}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          size="small"
-          disabled={commentLoading}
-          onClick={() => submitComment(bo_table, wr_id, commentFormValue)}
+        {error && <Typography color="error" align="center" sx={{ mt: 2 }}>{error}</Typography>}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            gap: 2,
+          }}
         >
-          댓글등록
-        </Button>
-      </Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="variables.wr_secret_checked"
+                size="small"
+                checked={commentFormValue.wr_secret_checked}
+                onChange={(e) => setCommentFormValue({
+                  ...commentFormValue,
+                  wr_secret_checked: e.target.checked
+                })}
+              />
+            }
+            label={<span style={{ fontSize: '0.875rem' }}>비밀댓글</span>}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="small"
+            disabled={commentLoading}
+            onClick={() => submitComment(bo_table, wr_id, commentFormValue)}
+          >
+            댓글등록
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
