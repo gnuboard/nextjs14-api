@@ -1,3 +1,5 @@
+// @/components/ThemeProvider.js
+
 "use client";
 import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';

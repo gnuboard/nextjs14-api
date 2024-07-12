@@ -43,7 +43,8 @@ const Header = ({ backgroundColor }) => {
 
   const menuItems = [
     { text: 'SPA', href: '/spa' },
-    { text: 'Snake', href: '/games/snake' },
+    { text: '게임', href: '/games/snake' },
+    { text: '설문조사', href: '/poll' },
     { text: '회사소개', href: '/about' },
     { text: '제품소개', href: '/products' },
     // { text: '쇼핑몰', href: '/shop' },
