@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    const savedToken = sessionStorage.getItem('accessToken');
+    const savedToken = localStorage.getItem('accessToken');
     if (savedToken) {
       setAccessToken(savedToken);
       fetchMemberInfo(savedToken);
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   
       const { access_token } = response.data;
       setAccessToken(access_token);
-      sessionStorage.setItem('accessToken', access_token);
+      localStorage.setItem('accessToken', access_token);
       await fetchMemberInfo(access_token);
       setIsLogin(true);
     } catch (error) {
@@ -66,8 +66,8 @@ export const AuthProvider = ({ children }) => {
     setUsername(null);
     setMemberInfo(null);
     setIsLogin(false);
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('username');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('username');
   };
 
   return (
