@@ -18,7 +18,7 @@ async function submitWrite(bo_table, formData, isLogin) {
   // 불리언 값을 문자열로 변환
   const dataToSend = {
     ...formData,
-    html: formData.html ? 'html' : '',
+    html: formData.html ? 'html1' : '',
     mail: formData.mail ? 'mail' : '',
     secret: formData.secret ? 'secret' : '',
     notice: formData.notice ? true : false
@@ -383,7 +383,7 @@ export default function WritePage({ params }) {
               />
             </Grid>
             <Grid item xs={12}>
-              {/* <FormControlLabel
+              <FormControlLabel
                 control={
                   <Checkbox
                     checked={formValues.html}
@@ -393,7 +393,7 @@ export default function WritePage({ params }) {
                   />
                 }
                 label="HTML 사용 여부"
-              /> */}
+              />
               <FormControlLabel
                 control={
                   <Checkbox
