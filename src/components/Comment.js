@@ -46,7 +46,7 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
   });
 
   async function submitComment(bo_table, wr_id, formData) {
-    const token = sessionStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken');
     const dataToSend = {
       ...formData,
       wr_option: formData.wr_secret_checked ? 'secret' : 'html1',
