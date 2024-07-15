@@ -20,6 +20,37 @@ async function fetchWriteById(bo_table, wr_id) {
   return response.data;
 }
 
+async function deleteWrite(bo_table, wr_id) {
+  const confirm = window.confirm('정말로 삭제하시겠습니까?');
+  if (!confirm) {
+    return;
+  }
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`;
+  let headers = {}
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    }
+  } else {
+    headers = {
+      'Content-Type': 'application/json',
+    }
+  }
+
+  try {
+    const response = await axios.delete(url, { headers });
+    if (response.data.result === 'deleted') {
+      alert('게시물이 삭제되었습니다.');
+      window.location.href = `/board/${bo_table}`;
+    }
+  } catch (error) {
+    alert(error);
+    console.error(error);
+  }
+}
+
 function WriteDetailsPage() {
   const { bo_table, wr_id } = useParams();
   const router = useRouter();
@@ -111,6 +142,18 @@ function WriteDetailsPage() {
                   수정
                 </Button>
               </Link>
+              <Button
+                onClick={() => {deleteWrite(bo_table, wr_id)}}
+                sx={{
+                  borderWidth: "0px",
+                  borderRadius: "10px",
+                  backgroundColor: "#bfbfbf",
+                  minHeight: "20px",
+                  color: "black"
+                }}
+              >
+                삭제
+              </Button>
             </Box>
           )}
         </Box>
