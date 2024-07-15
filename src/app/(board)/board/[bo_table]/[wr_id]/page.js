@@ -3,11 +3,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { Typography, Box, CircularProgress, Paper, Avatar, Grid, Button, ButtonGroup } from '@mui/material';
+import {
+  Typography, Box, CircularProgress, Paper, Avatar,
+  Grid, Button, ButtonGroup, CardMedia, Card
+} from '@mui/material';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { deepPurple } from '@mui/material/colors';
 import Comment, { CommentForm } from '@/components/Comment';
+import { get_img_url } from '@/utils/commonUtils';
 
 async function fetchWriteById(bo_table, wr_id) {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`);
@@ -59,7 +63,15 @@ function WriteDetailsPage() {
 
   return (
     <Box p={3} display="flex" justifyContent="center">
-      <Paper elevation={3} sx={{ p: 4, maxWidth: '800px', width: '100%' }}>
+      <Paper elevation={3} sx={{
+         p: 4,
+         maxWidth: '800px',
+         width: '100%',
+         '& img': {
+            maxWidth: '100%',
+            height: 'auto',
+         }
+      }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {write.wr_subject}
         </Typography>
@@ -78,6 +90,20 @@ function WriteDetailsPage() {
             </Typography>
           </Grid>
         </Grid>
+        {write?.images.map((img, index) => (
+          <Card key={`card_${index}`} sx={{boxShadow: 'none'}}>
+            <CardMedia
+              component="img"
+              image={get_img_url(img.bf_file)}
+              alt={`Image ${index + 1}`}
+              sx={{
+                width: 'auto',
+                maxWidth: '100%',
+                objectFit: 'scale-down',
+              }}
+            />
+          </Card>
+        ))}
         <Typography variant="body1" component="div" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(write.wr_content) }} />
         <ButtonGroup variant="outlined" fullWidth sx={{ mt: 3 }}>
           <Button onClick={() => handleNavigation(`/board/${bo_table}`)}>목록</Button>
