@@ -3,7 +3,6 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Slider from "react-slick";
 import { 
   Typography, 
@@ -22,6 +21,7 @@ import Board from '@/components/Board';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Link from 'next/link';
+import { fetchBoardNewDataRequest } from '@/app/axios/server_api';
 
 const CustomArrow = ({ direction, onClick }) => (
   <IconButton
@@ -60,10 +60,7 @@ const LatestGallery = ({ bo_table, view_type, rows }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/board-new/writes/${bo_table}`, {
-          params: { bo_table, view_type, rows }
-        });
-
+        const response = await fetchBoardNewDataRequest(bo_table, { bo_table, view_type, rows });
         const data = response.data;
         if (Array.isArray(data)) {
           setBoardData(data);

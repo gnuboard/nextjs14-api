@@ -48,6 +48,30 @@ export const loginRequest = async (username, password) => {
   }
 }
 
+export const fetchBoardDataRequest = async (bo_table, params) => {
+  try {
+    const response = await axiosInstance.get(
+      `/boards/${bo_table}/writes`,
+      { params: params },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const fetchBoardNewDataRequest = async (bo_table, params) => {
+  try {
+    const response = await axiosInstance.get(
+      `/board-new/writes/${bo_table}`,
+      { params: params },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const fetchWriteRequest = async (bo_table, wr_id) => {
   try {
     const response = await axiosInstance.get(`/boards/${bo_table}/writes/${wr_id}`);
@@ -110,6 +134,19 @@ export const fileUploadRequest = async (bo_table, wr_id, formData) => {
 export const deleteWriteRequest = async (bo_table, wr_id) => {
   try {
     const response = await axiosInstance.delete(`/boards/${bo_table}/writes/${wr_id}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const createCommentRequest = async (bo_table, wr_id, data) => {
+  try {
+    const response = await axiosInstance.post(
+      `/boards/${bo_table}/writes/${wr_id}/comments`,
+      data,
+      { headers: { 'Content-Type': 'application/json' } },
+    );
     return response;
   } catch (error) {
     throw error;

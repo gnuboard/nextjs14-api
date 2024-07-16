@@ -2,11 +2,11 @@
 
 "use client";
 
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { fetchBoardDataRequest } from '@/app/axios/server_api';
 
 const Board = ({ bo_table }) => {
   const [board, setBoard] = useState(null);
@@ -15,12 +15,7 @@ const Board = ({ bo_table }) => {
   useEffect(() => {
     const fetchBoardData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes`, {
-          params: {
-            bo_table,
-          },
-        });
-
+        const response = await fetchBoardDataRequest(bo_table, { bo_table });
         const data = response.data;
         if (data.board) {
           setBoard(data.board);

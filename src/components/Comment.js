@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'next/navigation';
 import {
   Typography, Avatar, Stack, Box, Divider,
@@ -8,6 +7,7 @@ import {
 import { SubdirectoryArrowRight } from "@mui/icons-material";
 import { get_img_url } from '@/utils/commonUtils';
 import { useAuth } from '@/components/AuthContext';
+import { createCommentRequest } from '@/app/axios/server_api';
 
 export default function Comment({ index, comment }) {
   return (
@@ -73,11 +73,7 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
 
     try {
       setCommentLoading(true);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}/comments`,
-        dataToSend,
-        {headers: headers},
-      );
+      const response = await createCommentRequest(bo_table, wr_id, dataToSend);
       setCommentFormValue({
         wr_content: '',
         wr_name: '',

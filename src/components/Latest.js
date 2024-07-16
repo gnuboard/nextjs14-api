@@ -2,7 +2,6 @@
 
 "use client";
 
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Board from './Board';
 import { useTheme } from '@mui/material/styles';
@@ -16,6 +15,7 @@ import {
   useMediaQuery
 } from '@mui/material';
 import Link from 'next/link';
+import { fetchBoardNewDataRequest } from '@/app/axios/server_api';
 
 // 작성자 이니셜을 얻는 함수
 const getInitials = (name) => {
@@ -28,14 +28,7 @@ const Latest = ({ bo_table, view_type, rows }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/board-new/writes/${bo_table}`, {
-          params: {
-            bo_table,
-            view_type,
-            rows
-          }
-        });
-
+        const response = await fetchBoardNewDataRequest(bo_table, { bo_table, view_type, rows });
         const data = response.data;
         if (Array.isArray(data)) {
           setBoardData(data);

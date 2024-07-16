@@ -1,7 +1,7 @@
 // src/hooks/useBoardConfig.js
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchBoardDataRequest } from '@/app/axios/server_api';
 
 export const useBoardConfig = (bo_table) => {
   const [boardConfig, setBoardConfig] = useState(null);
@@ -13,7 +13,7 @@ export const useBoardConfig = (bo_table) => {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes`;
       
       try {
-        const response = await axios.get(url);
+        const response = await fetchBoardDataRequest(bo_table);
         setBoardConfig(response.data);
       } catch (error) {
         console.error('Error fetching board settings:', error);
