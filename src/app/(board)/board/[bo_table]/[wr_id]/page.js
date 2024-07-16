@@ -109,7 +109,7 @@ function WriteDetailsPage() {
               </Grid>
             </Grid>
           </Box>
-          {write.mb_id === memberInfo?.mb_id && (
+          {(!write.mb_id || write.mb_id === memberInfo?.mb_id) && (
             <Box>
               <Link href={`/board/${bo_table}/write/${wr_id}`}>
                 <Button sx={{

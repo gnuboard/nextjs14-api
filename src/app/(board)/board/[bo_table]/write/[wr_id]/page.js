@@ -61,51 +61,39 @@ export default function WritePage({ params }) {
   const [error, setError] = useState('');
   const [file1, setFile1] = useState(null);
   const [file2, setFile2] = useState(null);
+  const [writeData, setWriteData] = useState(null);
 
   useEffect(() => {
-    let currentMbId;
-    fetchMemberRequest()
-    .then((response) => {
-      currentMbId = response.data.mb_id;
-      return currentMbId;
+    fetchWriteRequest(bo_table, wr_id)
+    .then(response => {
+      if (response.data.mb_id) {
+        fetchMemberRequest()
+        .then(memberRes => {
+          if (memberRes.data.mb_id !== response.data.mb_id) {
+            console.error("작성자만 수정할 수 있습니다.");
+            window.location.href="/";
+            return;
+          }
+        })
+      }
+      return response.data;
     })
-    .then((currentMbId) => {
-      fetchWriteRequest(bo_table, wr_id)
-      .then((response) => {
-        const writeData = response.data;
-        console.log(writeData);
-        // console.log(writeData.mb_id);
-        if (writeData.mb_id !== currentMbId) {
-          console.error("작성자만 수정할 수 있습니다.");
-          window.location.href="/";
-          return;
-        }
-        const wrOptionList = writeData.wr_option.split(',');
-        setFormValues(prevValues => ({
-          ...prevValues,
-          wr_subject: writeData.wr_subject,
-          wr_content: writeData.wr_content,
-          wr_name: writeData.wr_name,
-          wr_email: writeData.wr_email,
-          wr_link1: writeData.wr_link1,
-          wr_link2: writeData.wr_link2,
-          html: wrOptionList.includes('html1'),
-          mail: wrOptionList.includes('mail'),
-          secret: wrOptionList.includes('secret'),
-        }));
-      })
-    })
-    // console.log(currentMbId);
-    
-    if (memberInfo) {
-      setFormValues((prevValues) => ({
+    .then(data => {
+      setWriteData(data);
+      const wrOptionList = data.wr_option.split(',');
+      setFormValues(prevValues => ({
         ...prevValues,
-        wr_name: memberInfo.mb_name || '',
-        wr_email: memberInfo.mb_email || '',
-        wr_homepage: memberInfo.mb_homepage || '',
-        wr_password: '' // 보안상의 이유로 비밀번호는 빈 문자열로 설정
+        wr_subject: data?.wr_subject,
+        wr_content: data?.wr_content,
+        wr_name: data?.wr_name,
+        wr_email: data?.wr_email,
+        wr_link1: data?.wr_link1,
+        wr_link2: data?.wr_link2,
+        html: wrOptionList.includes('html1'),
+        mail: wrOptionList.includes('mail'),
+        secret: wrOptionList.includes('secret'),
       }));
-    }
+    })
   }, [memberInfo]);
 
   const handleChange = (e) => {
@@ -120,7 +108,7 @@ export default function WritePage({ params }) {
     e.preventDefault();
     setError('');
   
-    if (!isLogin) {
+    if (!writeData.mb_id) {
       if (!formValues.wr_name) {
         setError('작성자 이름을 입력해주세요.');
         return;
@@ -140,6 +128,9 @@ export default function WritePage({ params }) {
         const formData = new FormData();
         file1 && formData.append('file1', file1);
         file2 && formData.append('file2', file2);
+        if (!writeData.mb_id) {
+          formData.append('wr_password', formValues.wr_password);
+        }
         if (file1 || file2) {
           const fileResponse = await fileUploadRequest(bo_table, wr_id, formData);
           if (fileResponse.data.result !== "uploaded") {
@@ -236,7 +227,7 @@ export default function WritePage({ params }) {
                 }}
               />
             </Grid>
-            {!isLogin && (
+            {!writeData?.mb_id && (
             <>
               <Grid item xs={12} sm={6}>
                 <TextField
