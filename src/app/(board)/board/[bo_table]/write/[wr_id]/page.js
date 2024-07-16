@@ -146,13 +146,9 @@ export default function WritePage({ params }) {
     } catch (error) {
       console.error('Error submitting write:', error);
 
-      // 게시글 작성은 성공했지만 파일 업로드 중 오류가 발생한 경우는 alert후 게시글로 이동
-      if (wr_id) {
-        alert('게시글 작성 후 파일 업로드 중 오류가 발생했습니다.');
-        router.push(`/board/${bo_table}/${wr_id}`);
-      }
-
-      if (error.response.status === 429) {
+      if (error.response.status === 403) {
+        setError(error.response.data.detail);
+      } else if (error.response.status === 429) {
         setError(error.response.data.message);
       } else if (error.response && error.response.data && error.response.data.detail) {
         // detail이 배열인 경우 모든 에러 메시지를 결합
