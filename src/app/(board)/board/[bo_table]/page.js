@@ -3,16 +3,15 @@
 
 import React, { useState, useEffect } from 'react';
 import ListWrites from './List';
-import axios from 'axios';
 import ReactPaginate from 'react-paginate';
 import Search from './Search';
 import './pagination.css';
 import { Typography, Button } from '@mui/material';
 import { useAuth } from '@/components/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { fetchWriteListRequest } from '@/app/axios/server_api';
 
 async function fetchListWrites(bo_table, sst, sod, sfl, stx, sca, page, per_page) {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes`;
   const params = {
     sst,
     sod,
@@ -24,7 +23,7 @@ async function fetchListWrites(bo_table, sst, sod, sfl, stx, sca, page, per_page
   };
 
   try {
-    const response = await axios.get(url, { params });
+    const response = await fetchWriteListRequest(bo_table, params);
     return response.data;
   } catch (error) {
     console.error('Error fetching board writes:', error);

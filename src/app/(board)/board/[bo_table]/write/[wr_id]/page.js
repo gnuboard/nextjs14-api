@@ -3,7 +3,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Typography, TextField, Button, Box, FormControlLabel, Checkbox, Grid, Paper, Input } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -11,9 +10,9 @@ import { useAuth } from '@/components/AuthContext';
 import { useBoardConfig } from '@/hooks/useBoardConfig';
 import MenuItem from '@mui/material/MenuItem';
 import FileUpload from '@/components/FileUpload';
+import { updateWriteRequest, fetchMemberRequest, fetchWriteRequest, fileUploadRequest } from '@/app/axios/server_api';
 
-async function submitWriteUpdate(bo_table, wr_id, formData, isLogin) {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`;
+async function submitWriteUpdate(bo_table, wr_id, formData) {
 
   // 불리언 값을 문자열로 변환
   const dataToSend = {
@@ -25,22 +24,7 @@ async function submitWriteUpdate(bo_table, wr_id, formData, isLogin) {
   };
 
   try {
-    const token = localStorage.getItem('accessToken');
-    let headers = {}
-    if (isLogin) {
-      headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      }
-    } else {
-      headers = {
-        'Content-Type': 'application/json',
-      }
-    }
-
-    const response = await axios.put(url, JSON.stringify(dataToSend), {
-      headers: headers
-    });
+    const response = await updateWriteRequest(bo_table, wr_id, dataToSend);
     return response.data;
   } catch (error) {
     console.error('Error submitting write:', error);
@@ -79,20 +63,14 @@ export default function WritePage({ params }) {
   const [file2, setFile2] = useState(null);
 
   useEffect(() => {
-    let headers = {}
-    const savedToken = localStorage.getItem('accessToken');
-    if (savedToken) {
-        headers = {Authorization: `Bearer ${savedToken}`}
-    }
     let currentMbId;
-
-    axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/members/me`, {headers: headers})
+    fetchMemberRequest()
     .then((response) => {
       currentMbId = response.data.mb_id;
       return currentMbId;
     })
     .then((currentMbId) => {
-      axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`)
+      fetchWriteRequest(bo_table, wr_id)
       .then((response) => {
         const writeData = response.data;
         console.log(writeData);
@@ -154,8 +132,7 @@ export default function WritePage({ params }) {
     }
   
     try {
-      const response = await submitWriteUpdate(bo_table, wr_id, formValues, isLogin);
-      console.log(response);
+      const response = await submitWriteUpdate(bo_table, wr_id, formValues);
 
       // 게시글이 작성된 후 wr_id를 받아서 file upload를 진행, upload할 파일이 없으면 게시글로 이동
       if (response.result === "updated") {
@@ -164,11 +141,7 @@ export default function WritePage({ params }) {
         file1 && formData.append('file1', file1);
         file2 && formData.append('file2', file2);
         if (file1 || file2) {
-          const fileResponse = await axios.post(fileUrl, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            }
-          });
+          const fileResponse = await fileUploadRequest(bo_table, wr_id, formData);
           if (fileResponse.data.result !== "uploaded") {
             alert('게시글 작성 후 파일 업로드 중 오류가 발생했습니다.');
             console.log(fileResponse)

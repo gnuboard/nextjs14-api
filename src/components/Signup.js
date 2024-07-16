@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import axios from 'axios';
 import {
   Container, CssBaseline, TextField, Grid, Checkbox, FormControlLabel,
   FormGroup, Button, Typography, Box, Divider
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import { signupRequest } from '@/app/axios/server_api';
 
 export const Aggrement = ({
   allAgreed, setAllAgreed,
@@ -129,7 +129,7 @@ export const SignupForm = () => {
     setNickError('');
     setEmailError('');
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/members`, formData)
+      const response = await signupRequest(formData);
       if (response.status === 201) {
         alert(response.data.message);
         window.location.href="/login";

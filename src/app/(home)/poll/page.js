@@ -3,7 +3,6 @@
 // components/Poll.js
 
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   Box,
   Button,
@@ -35,6 +34,10 @@ import {
 import { Bar } from 'react-chartjs-2';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { format } from 'date-fns';
+import {
+  fetchLatestPollRequest, pollSurveyRequest,fetchPollResultsRequest,
+  createPollEtcOpinionRequest, deletePollEtcOpinionRequest
+} from '@/app/axios/server_api';
 
 // Register ChartJS components
 ChartJS.register(
@@ -62,7 +65,7 @@ const Poll = () => {
   useEffect(() => {
     const fetchPollData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/polls/latest`);
+        const response = await fetchLatestPollRequest();
         setPollData(response.data);
       } catch (error) {
         console.error('Error fetching poll data:', error);
@@ -93,9 +96,7 @@ const Poll = () => {
     }
 
     try {
-      const api_url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/polls/${pollData.po_id}/${selectedOptionIndex}`;
-      await axios.patch(api_url);
-      console.log('api_url:', api_url); // Debugging
+      await pollSurveyRequest(pollData.po_id, selectedOptionIndex);
       setError(''); // Clear error message on successful submission
       alert('Vote submitted successfully!');
       fetchPollResults(pollData.po_id);
@@ -119,8 +120,7 @@ const Poll = () => {
     }
 
     try {
-      const api_url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/polls/${pollData.po_id}/etc`;
-      await axios.post(api_url, { pc_name: commentName, pc_idea: comment });
+      await createPollEtcOpinionRequest(pollData.po_id, { pc_name: commentName, pc_idea: comment });
       console.log('Comment submitted:', comment); // Debugging
       setError(''); // Clear error message on successful comment submission
       alert('Comment submitted successfully!');
@@ -134,7 +134,7 @@ const Poll = () => {
 
   const fetchPollResults = async (pollId) => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/polls/${pollId}`);
+      const response = await fetchPollResultsRequest(pollId);
       setResults(response.data);
       setOpen(true);
     } catch (error) {
@@ -158,16 +158,7 @@ const Poll = () => {
     const { po_id, pc_id } = commentToDelete;
 
     try {
-      const token = localStorage.getItem('accessToken'); // Adjust this line based on where you store your token
-      const api_url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/polls/${po_id}/etc/${pc_id}`;
-      
-      await axios.delete(api_url, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      console.log('Comment deleted:', api_url); // Debugging
+      await deletePollEtcOpinionRequest(po_id, pc_id);
       setDeleteDialogOpen(false);
       setCommentToDelete(null);
       fetchPollResults(po_id);

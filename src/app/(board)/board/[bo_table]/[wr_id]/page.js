@@ -7,40 +7,22 @@ import {
   Typography, Box, CircularProgress, Paper, Avatar,
   Grid, Button, ButtonGroup, CardMedia, Card
 } from '@mui/material';
-import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { deepPurple } from '@mui/material/colors';
 import Comment, { CommentForm } from '@/components/Comment';
 import { get_img_url } from '@/utils/commonUtils';
 import { useAuth } from '@/components/AuthContext';
 import Link from 'next/link';
-
-async function fetchWriteById(bo_table, wr_id) {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`);
-  return response.data;
-}
+import { fetchWriteRequest, deleteWriteRequest } from '@/app/axios/server_api';
 
 async function deleteWrite(bo_table, wr_id) {
   const confirm = window.confirm('정말로 삭제하시겠습니까?');
   if (!confirm) {
     return;
   }
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/boards/${bo_table}/writes/${wr_id}`;
-  let headers = {}
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    }
-  } else {
-    headers = {
-      'Content-Type': 'application/json',
-    }
-  }
 
   try {
-    const response = await axios.delete(url, { headers });
+    const response = await deleteWriteRequest(bo_table, wr_id);
     if (response.data.result === 'deleted') {
       alert('게시물이 삭제되었습니다.');
       window.location.href = `/board/${bo_table}`;
@@ -62,9 +44,9 @@ function WriteDetailsPage() {
 
   useEffect(() => {
     if (bo_table && wr_id) {
-      fetchWriteById(bo_table, wr_id)
-        .then((data) => {
-          setWrite(data);
+      fetchWriteRequest(bo_table, wr_id)
+        .then((response) => {
+          setWrite(response.data);
           setLoading(false);
         })
         .catch((error) => {
