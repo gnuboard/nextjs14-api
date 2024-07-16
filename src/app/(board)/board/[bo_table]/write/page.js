@@ -109,6 +109,9 @@ export default function WritePage({ params }) {
         const formData = new FormData();
         file1 && formData.append('file1', file1);
         file2 && formData.append('file2', file2);
+        if (!isLogin) {
+          formData.append('wr_password', formValues.wr_password);
+        }
         if (file1 || file2) {
           const fileResponse = await fileUploadRequest(bo_table, wr_id, formData);
           if (fileResponse.data.result !== "uploaded") {
