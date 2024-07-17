@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme } from '@mui/material';
+import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme, Box } from '@mui/material';
 import { truncateText, formatDate } from '@/utils/commonUtils';
 import { useSearchParams } from 'next/navigation';
 
@@ -60,11 +60,16 @@ function ListWrites({ board, writes }) {
               <ListItem alignItems="flex-start">
                 <Grid container spacing={2}>
                   <Grid item xs={isSmallScreen ? 10 : 8}>
-                    <Typography variant="body1" component="div">
-                      <Link href={`/board/${board.bo_table}/${write.wr_id}?${query}`} passHref>
-                        {truncateText(write.wr_subject, maxLengthSubject)}
-                      </Link>
-                    </Typography>
+                    <Box display="flex">
+                      <Typography variant="body1" component="div" mr="5px">
+                        <Link href={`/board/${board.bo_table}/${write.wr_id}?${query}`} passHref>
+                          {truncateText(write.wr_subject, maxLengthSubject)}
+                        </Link>
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {write.wr_comment > 0 && `[${write.wr_comment}]`}
+                      </Typography>
+                    </Box>
                   </Grid>
                   {!isSmallScreen && (
                     <Grid item xs={2}>

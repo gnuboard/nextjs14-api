@@ -67,9 +67,14 @@ const Latest = ({ bo_table, view_type, rows }) => {
                     },
                   }}
                 >
-                  <Typography variant="body1" sx={{ flexGrow: 1, fontSize: '0.875rem' }}>
-                    {truncateText(board.wr_subject, 20)}
-                  </Typography>
+                  <ListItem>
+                    <Typography variant="body1" sx={{ fontSize: '0.875rem', mr: '5px'}}>
+                      {truncateText(board.wr_subject, 20)}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {board.wr_comment > 0 && `[${board.wr_comment}]`}
+                    </Typography>
+                  </ListItem>
                   <Typography variant="body2" sx={{ color: 'text.secondary', width: '80px', textAlign: 'right', fontSize: '0.75rem' }}>
                     {formatDate(board.wr_datetime)}
                   </Typography>
