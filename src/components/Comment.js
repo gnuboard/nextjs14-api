@@ -7,9 +7,32 @@ import {
 import { SubdirectoryArrowRight } from "@mui/icons-material";
 import { get_img_url } from '@/utils/commonUtils';
 import { useAuth } from '@/components/AuthContext';
-import { createCommentRequest } from '@/app/axios/server_api';
+import { createCommentRequest, deleteCommentRequest } from '@/app/axios/server_api';
 
-export default function Comment({ index, comment }) {
+async function deleteComment(bo_table, wr_id, comment_id, setCommentLoading) {
+  const confirm = window.confirm('정말로 삭제하시겠습니까?');
+  if (!confirm) {
+    return;
+  }
+
+  setCommentLoading(true);
+  try {
+    const response = await deleteCommentRequest(bo_table, wr_id, comment_id);
+    console.log(response);
+    if (response.data.result === 'deleted') {
+      alert('댓글이 삭제되었습니다.');
+    }
+  } catch (error) {
+    alert(error);
+    console.error(error);
+  } finally {
+    setCommentLoading(false);
+  }
+}
+
+export default function Comment({ index, bo_table, write, comment, setCommentLoading }) {
+  const { memberInfo } = useAuth();
+  const editVisible = (comment.mb_id === memberInfo?.mb_id);    // 댓글 작성자: 로그인 유저
   return (
     <Box key={index} sx={{ paddingLeft: comment.wr_comment_reply.length * 4 }}>
       <Divider sx={{ marginBottom: "10px" }} />
@@ -23,6 +46,24 @@ export default function Comment({ index, comment }) {
           <Stack direction="row" alignItems="center" spacing={1}>
             <Typography variant="subtitle1">{comment.wr_name}</Typography>
             <Typography variant="body2">{comment.wr_datetime}</Typography>
+            {editVisible && (
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  maxHeight: "20px",
+                  padding: "0px",
+                  minWidth: "unset",
+                  width: "35px",
+                  backgroundColor: 'gray',
+                }}
+                onClick={() => deleteComment(bo_table, write.wr_id, comment.wr_id, setCommentLoading)}
+              >
+                <Typography variant="caption" sx={{ fontSize: '0.6rem' }}>
+                  삭제
+                </Typography>
+              </Button>
+            )}
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
             <Typography variant="body1">{comment.save_content}</Typography>

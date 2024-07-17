@@ -166,6 +166,15 @@ export const createCommentRequest = async (bo_table, wr_id, data) => {
   }
 }
 
+export const deleteCommentRequest = async (bo_table, wr_id, comment_id) => {
+  try {
+    const response = await axiosInstance.delete(`/boards/${bo_table}/writes/${wr_id}/comments/${comment_id}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const fetchLatestPollRequest = async () => {
   try {
     const response = await axiosInstance.get('/polls/latest');

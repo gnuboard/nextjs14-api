@@ -182,7 +182,11 @@ function WriteDetailsPage() {
           <Comment 
             key={index}
             index={index}
+            bo_table={bo_table}
+            write={write}
             comment={comment}
+            commentLoading={commentLoading}
+            setCommentLoading={setCommentLoading}
           />
         ))}
         <CommentForm
