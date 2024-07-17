@@ -13,16 +13,34 @@ import Comment, { CommentForm } from '@/components/Comment';
 import { get_img_url } from '@/utils/commonUtils';
 import { useAuth } from '@/components/AuthContext';
 import Link from 'next/link';
-import { fetchWriteRequest, deleteWriteRequest } from '@/app/axios/server_api';
+import {
+  fetchWriteRequest, deleteWriteRequest,
+  deleteNoneMemberWriteRequest,
+} from '@/app/axios/server_api';
 
-async function deleteWrite(bo_table, wr_id) {
+async function deleteWrite(bo_table, write) {
+  let wr_password;
+
+  if (!write.mb_id) {
+    wr_password = prompt('비회원 게시글 삭제시 비밀번호가 필요합니다.');
+    if (!wr_password) {
+      return;
+    }
+  }
+
   const confirm = window.confirm('정말로 삭제하시겠습니까?');
   if (!confirm) {
     return;
   }
 
   try {
-    const response = await deleteWriteRequest(bo_table, wr_id);
+    let response;
+    if (write.mb_id) {
+      response = await deleteWriteRequest(bo_table, write.wr_id);
+    } else {
+      response = await deleteNoneMemberWriteRequest(bo_table, write.wr_id, wr_password);
+    }
+
     if (response.data.result === 'deleted') {
       alert('게시물이 삭제되었습니다.');
       window.location.href = `/board/${bo_table}`;
@@ -125,7 +143,7 @@ function WriteDetailsPage() {
                 </Button>
               </Link>
               <Button
-                onClick={() => {deleteWrite(bo_table, wr_id)}}
+                onClick={() => {deleteWrite(bo_table, write)}}
                 sx={{
                   borderWidth: "0px",
                   borderRadius: "10px",
