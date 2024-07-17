@@ -7,23 +7,43 @@ import {
 import { SubdirectoryArrowRight } from "@mui/icons-material";
 import { get_img_url } from '@/utils/commonUtils';
 import { useAuth } from '@/components/AuthContext';
-import { createCommentRequest, deleteCommentRequest } from '@/app/axios/server_api';
+import {
+  createCommentRequest, deleteCommentRequest,
+  deleteNoneMemberCommentRequest
+} from '@/app/axios/server_api';
 
-async function deleteComment(bo_table, wr_id, comment_id, setCommentLoading) {
+async function deleteComment(bo_table, wr_id, comment, setCommentLoading) {
   const confirm = window.confirm('정말로 삭제하시겠습니까?');
   if (!confirm) {
     return;
   }
 
+  let wr_password;
+  if (!comment.mb_id) {
+    wr_password = prompt('비회원 댓글 삭제시 비밀번호가 필요합니다.');
+    if (!wr_password) {
+      return;
+    }
+  }
+
   setCommentLoading(true);
   try {
-    const response = await deleteCommentRequest(bo_table, wr_id, comment_id);
+    let response;
+    if (comment.mb_id) {
+      response = await deleteCommentRequest(bo_table, wr_id, comment.wr_id);
+    } else {
+      response = await deleteNoneMemberCommentRequest(bo_table, wr_id, comment.wr_id, wr_password);
+    }
     console.log(response);
     if (response.data.result === 'deleted') {
       alert('댓글이 삭제되었습니다.');
     }
   } catch (error) {
-    alert(error);
+    if (error.response.status === 403) {
+      alert('삭제할 권한이 없습니다.');
+    } else {
+      alert(error);
+    }
     console.error(error);
   } finally {
     setCommentLoading(false);
@@ -32,7 +52,10 @@ async function deleteComment(bo_table, wr_id, comment_id, setCommentLoading) {
 
 export default function Comment({ index, bo_table, write, comment, setCommentLoading }) {
   const { memberInfo } = useAuth();
-  const editVisible = (comment.mb_id === memberInfo?.mb_id);    // 댓글 작성자: 로그인 유저
+  const editVisible = (
+    comment.mb_id === memberInfo?.mb_id ||    // 댓글 작성자: 로그인 유저
+    !comment.mb_id                            // 댓글 작성자: 비회원
+  );
   return (
     <Box key={index} sx={{ paddingLeft: comment.wr_comment_reply.length * 4 }}>
       <Divider sx={{ marginBottom: "10px" }} />
@@ -57,7 +80,7 @@ export default function Comment({ index, bo_table, write, comment, setCommentLoa
                   width: "35px",
                   backgroundColor: 'gray',
                 }}
-                onClick={() => deleteComment(bo_table, write.wr_id, comment.wr_id, setCommentLoading)}
+                onClick={() => deleteComment(bo_table, write.wr_id, comment, setCommentLoading)}
               >
                 <Typography variant="caption" sx={{ fontSize: '0.6rem' }}>
                   삭제

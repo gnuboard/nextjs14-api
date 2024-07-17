@@ -175,6 +175,19 @@ export const deleteCommentRequest = async (bo_table, wr_id, comment_id) => {
   }
 }
 
+export const deleteNoneMemberCommentRequest = async (bo_table, wr_id, comment_id, wr_password) => {
+  try {
+    const response = await axiosInstance.post(
+      `/boards/${bo_table}/writes/${wr_id}/comments/${comment_id}/delete`,
+      wr_password,
+      { headers: { 'Content-Type': 'application/json' } },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const fetchLatestPollRequest = async () => {
   try {
     const response = await axiosInstance.get('/polls/latest');
