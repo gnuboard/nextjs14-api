@@ -13,6 +13,7 @@ import Comment, { CommentForm } from '@/components/Comment';
 import { get_img_url } from '@/utils/commonUtils';
 import { useAuth } from '@/components/AuthContext';
 import Link from 'next/link';
+import { FileDownloadCard } from '@/components/FileDownload';
 import {
   fetchWriteRequest, deleteWriteRequest,
   deleteNoneMemberWriteRequest,
@@ -172,6 +173,12 @@ function WriteDetailsPage() {
           </Card>
         ))}
         <Typography variant="body1" component="div" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(write.wr_content) }} />
+        {write.images?.map((file, index) => (
+          <FileDownloadCard key={index} bo_table={bo_table} wr_id={write.wr_id} fileName={file.bf_source} fileIndex={file.bf_no} downloadDate={file.bf_datetime} />
+        ))}
+        {write.normal_files?.map((file, index) => (
+          <FileDownloadCard key={index} bo_table={bo_table} wr_id={write.wr_id} fileName={file.bf_source} fileIndex={file.bf_no} downloadDate={file.bf_datetime} />
+        ))}
         <ButtonGroup variant="outlined" fullWidth sx={{ mt: 3 }}>
           <Button onClick={() => handleNavigation(`/board/${bo_table}`)}>목록</Button>
           <Button onClick={() => handleNavigation(`/board/${bo_table}/write`)}>쓰기</Button>
