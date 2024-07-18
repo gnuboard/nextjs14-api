@@ -153,6 +153,19 @@ export const deleteNoneMemberWriteRequest = async (bo_table, wr_id, wr_password)
   }
 }
 
+export const deleteWriteListRequest = async (bo_table, wr_ids) => {
+  try {
+    const response = await axiosInstance.post(
+      `/boards/${bo_table}/writes/delete`,
+      wr_ids,
+      { headers: { 'Content-Type': 'application/json' } },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const createCommentRequest = async (bo_table, wr_id, data) => {
   try {
     const response = await axiosInstance.post(

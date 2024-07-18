@@ -3,11 +3,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme, Box } from '@mui/material';
+import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme, Box, Input } from '@mui/material';
 import { truncateText, formatDate } from '@/utils/commonUtils';
 import { useSearchParams } from 'next/navigation';
 
-function ListWrites({ board, writes }) {
+function ListWrites({ board, writes, checkedStatus, updateCheckedStatus }) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
@@ -58,6 +58,9 @@ function ListWrites({ board, writes }) {
           writes.map((write) => (
             <React.Fragment key={write.wr_id}>
               <ListItem alignItems="flex-start">
+                <Grid item xs={isSmallScreen ? 10 : 8} mr="20px">
+                  <Input type="checkbox" id={write.wr_id} onChange={(event) => {updateCheckedStatus(event, checkedStatus);}} />
+                </Grid>
                 <Grid container spacing={2}>
                   <Grid item xs={isSmallScreen ? 10 : 8}>
                     <Box display="flex">

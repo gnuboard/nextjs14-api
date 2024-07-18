@@ -6,10 +6,10 @@ import ListWrites from './List';
 import ReactPaginate from 'react-paginate';
 import Search from './Search';
 import './pagination.css';
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Box } from '@mui/material';
 import { useAuth } from '@/components/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { fetchWriteListRequest } from '@/app/axios/server_api';
+import { fetchWriteListRequest, deleteWriteListRequest } from '@/app/axios/server_api';
 
 async function fetchListWrites(bo_table, sst, sod, sfl, stx, sca, page, per_page) {
   const params = {
@@ -50,8 +50,49 @@ export default function ListWritesPage({ params }) {
   const [board, setBoard] = useState({});
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [checkedStatus, setCheckedStatus] = useState({});
+  const [ listDeleted, setListDeleted ] = useState(false);
 
   const { isLogin } = useAuth();
+
+  const initCheckedStatus = (writes) => {
+    const checkedStatus = {};
+    writes.forEach(write => {
+      checkedStatus[write.wr_id] = false;
+    });
+    return checkedStatus;
+  }
+
+  const updateCheckedStatus = (event, checkedStatus) => {
+    checkedStatus[event.target.id] = event.target.checked;
+  }
+
+  const submitListDelete = async (checkedStatus) => {
+    const confirmDelete = confirm('선택한 글 목록을 삭제하시겠습니까?');
+    if (!confirmDelete) {
+      return;
+    }
+
+    const checkedList = [];
+    for (const [id, checked] of Object.entries(checkedStatus)) {
+      if (checked) {
+        checkedList.push(id);
+      }
+    }
+
+    try {
+      await deleteWriteListRequest(bo_table, checkedList);
+    } catch (error) {
+      console.error('Error deleting writes:', error);
+      if (error.response.status === 401) {
+        alert("관리자 로그인이 필요합니다.");
+      } else if (error.response.status === 403) {
+        alert("관리자만 일괄 삭제 기능을 사용할 수 있습니다.");
+      }
+    } finally {
+      setListDeleted(!listDeleted);
+    }
+  }
 
   useEffect(() => {
     const loadWrites = async () => {
@@ -60,10 +101,11 @@ export default function ListWritesPage({ params }) {
       setBoard(data.board || {});
       setTotalRecords(data.total_records);
       setTotalPages(data.total_pages);
+      setCheckedStatus(initCheckedStatus(data.writes));
     };
 
     loadWrites();
-  }, [bo_table, currentPage, sst, sod, sfl, stx, sca, per_page]);
+  }, [bo_table, currentPage, sst, sod, sfl, stx, sca, per_page, listDeleted]);
 
   const updateQueryAndLoadWrites = (newPage, newSfl, newStx) => {
     const queryParams = new URLSearchParams({ sfl: newSfl, stx: newStx, page: newPage.toString() });
@@ -107,11 +149,16 @@ export default function ListWritesPage({ params }) {
           onSubmit={handleSearchSubmit} 
           isLogin={isLogin} 
         />
-        <Button variant="contained" color="primary" onClick={handleWriteClick}>
-          글쓰기
-        </Button>
+        <Box>
+          <Button variant="contained" onClick={() => {submitListDelete(checkedStatus)}} sx={{mr: "10px", backgroundColor: "gray"}}>
+            일괄삭제
+          </Button>
+          <Button variant="contained" color="primary" onClick={handleWriteClick}>
+            글쓰기
+          </Button>
+        </Box>
       </div>
-      <ListWrites writes={writes} board={board} />
+      <ListWrites writes={writes} board={board} checkedStatus={checkedStatus} updateCheckedStatus={updateCheckedStatus} />
       <ReactPaginate
         initialPage={currentPage - 1} // Set the initial page correctly
         pageCount={totalPages}
