@@ -50,31 +50,27 @@ export default function ListWritesPage({ params }) {
   const [board, setBoard] = useState({});
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [checkedStatus, setCheckedStatus] = useState({});
+  const [ subCheckboxes, setSubCheckboxes ] = useState({});
   const [ listDeleted, setListDeleted ] = useState(false);
 
   const { isLogin } = useAuth();
 
   const initCheckedStatus = (writes) => {
-    const checkedStatus = {};
+    const subCheckboxes = {};
     writes.forEach(write => {
-      checkedStatus[write.wr_id] = false;
+      subCheckboxes[write.wr_id] = false;
     });
-    return checkedStatus;
+    return subCheckboxes;
   }
 
-  const updateCheckedStatus = (event, checkedStatus) => {
-    checkedStatus[event.target.id] = event.target.checked;
-  }
-
-  const submitListDelete = async (checkedStatus) => {
+  const submitListDelete = async (subCheckboxes) => {
     const confirmDelete = confirm('선택한 글 목록을 삭제하시겠습니까?');
     if (!confirmDelete) {
       return;
     }
 
     const checkedList = [];
-    for (const [id, checked] of Object.entries(checkedStatus)) {
+    for (const [id, checked] of Object.entries(subCheckboxes)) {
       if (checked) {
         checkedList.push(id);
       }
@@ -101,7 +97,7 @@ export default function ListWritesPage({ params }) {
       setBoard(data.board || {});
       setTotalRecords(data.total_records);
       setTotalPages(data.total_pages);
-      setCheckedStatus(initCheckedStatus(data.writes));
+      setSubCheckboxes(initCheckedStatus(data.writes));
     };
 
     loadWrites();
@@ -150,7 +146,7 @@ export default function ListWritesPage({ params }) {
           isLogin={isLogin} 
         />
         <Box>
-          <Button variant="contained" onClick={() => {submitListDelete(checkedStatus)}} sx={{mr: "10px", backgroundColor: "gray"}}>
+          <Button variant="contained" onClick={() => {submitListDelete(subCheckboxes)}} sx={{mr: "10px", backgroundColor: "gray"}}>
             일괄삭제
           </Button>
           <Button variant="contained" color="primary" onClick={handleWriteClick}>
@@ -158,7 +154,7 @@ export default function ListWritesPage({ params }) {
           </Button>
         </Box>
       </div>
-      <ListWrites writes={writes} board={board} checkedStatus={checkedStatus} updateCheckedStatus={updateCheckedStatus} />
+      <ListWrites writes={writes} board={board} subCheckboxes={subCheckboxes} setSubCheckboxes={setSubCheckboxes} />
       <ReactPaginate
         initialPage={currentPage - 1} // Set the initial page correctly
         pageCount={totalPages}

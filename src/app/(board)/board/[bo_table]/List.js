@@ -1,18 +1,37 @@
 // src/app/(board)/board/[bo_table]/List.js
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme, Box, Input } from '@mui/material';
+import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme, Box } from '@mui/material';
 import { truncateText, formatDate } from '@/utils/commonUtils';
 import { useSearchParams } from 'next/navigation';
 
-function ListWrites({ board, writes, checkedStatus, updateCheckedStatus }) {
+function ListWrites({ board, writes, subCheckboxes, setSubCheckboxes }) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const searchParams = useSearchParams();
   const query = searchParams.toString();
+  const [ mainChecked, setMainChecked ] = useState(false);
+
+  const handleMainCheckboxChange = (event) => {
+    const isChecked = event.target.checked;
+    setMainChecked(isChecked);
+
+    const updatedSubCheckboxes = Object.fromEntries(
+      Object.keys(subCheckboxes).map(key => [key, isChecked])
+    );
+
+    setSubCheckboxes(updatedSubCheckboxes);
+  };
+
+  const handleSubCheckboxChange = (id) => {
+    setSubCheckboxes(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   const maxLengthSubject = isVerySmallScreen ? 20 : isSmallScreen ? 25 : 35;
   const maxLengthName = isVerySmallScreen ? 5 : isSmallScreen ? 6 : 10;
@@ -22,6 +41,9 @@ function ListWrites({ board, writes, checkedStatus, updateCheckedStatus }) {
       <List>
         {/* Header Row */}
         <ListItem>
+          <Grid item xs={isSmallScreen ? 10 : 8} mr="20px">
+            <input type="checkbox" checked={mainChecked} onChange={handleMainCheckboxChange} />
+          </Grid>
           <Grid container spacing={2}>
             <Grid item xs={isSmallScreen ? 10 : 8}>
               <Typography variant="h6" component="div">
@@ -59,7 +81,7 @@ function ListWrites({ board, writes, checkedStatus, updateCheckedStatus }) {
             <React.Fragment key={write.wr_id}>
               <ListItem alignItems="flex-start">
                 <Grid item xs={isSmallScreen ? 10 : 8} mr="20px">
-                  <Input type="checkbox" id={write.wr_id} onChange={(event) => {updateCheckedStatus(event, checkedStatus);}} />
+                  <input type="checkbox" id={write.wr_id} checked={subCheckboxes[write.wr_id]} onChange={() => handleSubCheckboxChange(write.wr_id)} />
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item xs={isSmallScreen ? 10 : 8}>
