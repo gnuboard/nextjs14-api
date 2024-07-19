@@ -4,7 +4,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export function ActionMenu({
   submitListDelete,
-  submitListCopy,
+  submitListAction,
   setOpen,
   subCheckboxes,
 }) {
@@ -32,7 +32,7 @@ export function ActionMenu({
           일괄삭제
         </MenuItem>
         <MenuItem onClick={() => {
-          submitListCopy(subCheckboxes);
+          submitListAction(subCheckboxes, 'copy');
           setOpen(true);
           handleClose();
         }}>

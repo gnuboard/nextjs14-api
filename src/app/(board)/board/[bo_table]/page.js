@@ -61,6 +61,7 @@ export default function ListWritesPage({ params }) {
   const [boardList, setBoardList] = useState([]);
   const [selectedBoards, setSelectedBoards] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
+  const [action, setAction] = useState('');
 
   const { isLogin } = useAuth();
 
@@ -99,7 +100,7 @@ export default function ListWritesPage({ params }) {
     }
   }
 
-  const submitListCopy = async (subCheckboxes) => {
+  const submitListAction = async (subCheckboxes, action) => {
     const checkedBoxes = [];
     for (const [id, checked] of Object.entries(subCheckboxes)) {
       if (checked) {
@@ -109,8 +110,9 @@ export default function ListWritesPage({ params }) {
     setCheckedList(checkedBoxes);
 
     try {
-      const response = await fetchActionBoardListRequest(bo_table, 'copy');
+      const response = await fetchActionBoardListRequest(bo_table, action);
       setBoardList(response.data);
+      setAction(action);
     } catch (error) {
       console.error('Error copying writes:', error);
     }
@@ -124,7 +126,7 @@ export default function ListWritesPage({ params }) {
     }
 
     try {
-      const response = await executeActionBoardRequest(bo_table, 'copy', dataToSend);
+      const response = await executeActionBoardRequest(bo_table, action, dataToSend);
       if (response.status === 200) {
         alert(response.data.result);
       }
@@ -197,7 +199,7 @@ export default function ListWritesPage({ params }) {
           </Button>
           <ActionMenu
             submitListDelete={submitListDelete}
-            submitListCopy={submitListCopy}
+            submitListAction={submitListAction}
             setOpen={setOpen}
             subCheckboxes={subCheckboxes}
           />
