@@ -319,6 +319,7 @@ export function UpdateCommentForm({ commentLoading, setCommentLoading, comment, 
         wr_password: '',
       }))
       setError('');
+      setEditFormVisible(false);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -329,7 +330,6 @@ export function UpdateCommentForm({ commentLoading, setCommentLoading, comment, 
       }
     } finally {
       setCommentLoading(false);
-      setEditFormVisible(false);
     }
   }
 
