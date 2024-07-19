@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-export const BoardSelectionModal = ({ open, onClose, onSubmit, boardList, selectedBoards, setSelectedBoards }) => {
+export const BoardSelectionModal = ({ open, onClose, onSubmit, boardList, selectedBoards, setSelectedBoards, action }) => {
   const handleToggleBoard = (id) => {
     setSelectedBoards(prev => 
       prev.includes(id) ? prev.filter(boardId => boardId !== id) : [...prev, id]
@@ -16,6 +16,8 @@ export const BoardSelectionModal = ({ open, onClose, onSubmit, boardList, select
     onSubmit(selectedBoards);
     onClose();
   };
+
+  const actionString = action === 'copy' ? '복사' : '이동';
 
   return (
     <Modal
@@ -36,7 +38,7 @@ export const BoardSelectionModal = ({ open, onClose, onSubmit, boardList, select
       }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography id="board-selection-modal-title" variant="h6" component="h2">
-            게시물 복사
+            게시물 {actionString}
           </Typography>
           <IconButton onClick={onClose} size="small">
             <CloseIcon />
@@ -67,7 +69,7 @@ export const BoardSelectionModal = ({ open, onClose, onSubmit, boardList, select
             취소하기
           </Button>
           <Button onClick={handleSubmit} variant="contained">
-            복사
+            {actionString}
           </Button>
         </Box>
       </Box>

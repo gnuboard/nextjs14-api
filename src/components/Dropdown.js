@@ -38,7 +38,11 @@ export function ActionMenu({
         }}>
           선택복사
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => {
+          submitListAction(subCheckboxes, 'move');
+          setOpen(true);
+          handleClose();
+        }}>
           선택이동
         </MenuItem>
       </Menu>

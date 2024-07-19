@@ -213,6 +213,7 @@ export default function ListWritesPage({ params }) {
           boardList={boardList}
           selectedBoards={selectedBoards}
           setSelectedBoards={setSelectedBoards}
+          action={action}
         />
       </div>
       <ListWrites writes={writes} board={board} subCheckboxes={subCheckboxes} setSubCheckboxes={setSubCheckboxes} />
