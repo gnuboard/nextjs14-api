@@ -54,6 +54,7 @@ async function deleteComment(bo_table, wr_id, comment, setCommentLoading) {
 export default function Comment({ index, bo_table, write, comment, setCommentLoading }) {
   const { memberInfo } = useAuth();
   const [ editFormVisible, setEditFormVisible ] = useState(false);
+  const [ subCommentVisible, setSubCommentVisible ] = useState(false);
   const editVisible = (
     comment.mb_id === memberInfo?.mb_id ||    // 댓글 작성자: 로그인 유저
     !comment.mb_id                            // 댓글 작성자: 비회원
@@ -71,6 +72,22 @@ export default function Comment({ index, bo_table, write, comment, setCommentLoa
           <Stack direction="row" alignItems="center" spacing={1}>
             <Typography variant="subtitle1">{comment.wr_name}</Typography>
             <Typography variant="body2">{comment.wr_datetime}</Typography>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                maxHeight: "20px",
+                padding: "0px",
+                minWidth: "unset",
+                width: "35px",
+                backgroundColor: 'green',
+              }}
+              onClick={() => setSubCommentVisible(!subCommentVisible)}
+            >
+              <Typography variant="caption" sx={{ fontSize: '0.6rem' }}>
+                답변
+              </Typography>
+            </Button>
             {editVisible && (
               <>
                 <Button
@@ -126,11 +143,14 @@ export default function Comment({ index, bo_table, write, comment, setCommentLoa
       <Box display={editFormVisible ? "block" : "none"} mb="10px">
         <UpdateCommentForm commentLoading={false} setCommentLoading={setCommentLoading} comment={comment} setEditFormVisible={setEditFormVisible} />
       </Box>
+      <Box display={subCommentVisible ? "block" : "none"} mb="10px">
+        <CommentForm commentLoading={false} setCommentLoading={setCommentLoading} comment={comment} setSubCommentVisible={setSubCommentVisible} />
+      </Box>
     </Box>
   );
 }
 
-export function CommentForm({ commentLoading, setCommentLoading }) {
+export function CommentForm({ commentLoading, setCommentLoading, comment, setSubCommentVisible }) {
   const { bo_table, wr_id } = useParams();
   const { isLogin } = useAuth();
   const [error, setError] = useState('');
@@ -139,7 +159,7 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
     wr_name: '',
     wr_password: '',
     wr_secret_checked: false,
-    comment_id: 0,
+    comment_id: comment ? comment.wr_id : 0,
   });
 
   async function submitComment(bo_table, wr_id, formData) {
@@ -179,6 +199,9 @@ export function CommentForm({ commentLoading, setCommentLoading }) {
         comment_id: 0,
       });
       setError('');
+      if (setSubCommentVisible) {
+        setSubCommentVisible(false);
+      }
       return response.data;
     } catch (error) {
       console.error(error);
