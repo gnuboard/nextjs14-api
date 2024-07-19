@@ -228,6 +228,28 @@ export const deleteNoneMemberCommentRequest = async (bo_table, wr_id, comment_id
   }
 }
 
+export const fetchActionBoardListRequest = async (bo_table, action) => {
+  try {
+    const response = await axiosInstance.get(`/boards/${bo_table}/${action}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const executeActionBoardRequest = async (bo_table, action, data) => {
+  try {
+    const response = await axiosInstance.post(
+      `/boards/${bo_table}/${action}`,
+      data,
+      { headers: { 'Content-Type': 'application/json' } },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const fetchLatestPollRequest = async () => {
   try {
     const response = await axiosInstance.get('/polls/latest');

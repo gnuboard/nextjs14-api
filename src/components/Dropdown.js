@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { MenuItem, Menu, IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export function ActionMenu({ submitListDelete, subCheckboxes }) {
+export function ActionMenu({
+  submitListDelete,
+  submitListCopy,
+  setOpen,
+  subCheckboxes,
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -26,7 +31,11 @@ export function ActionMenu({ submitListDelete, subCheckboxes }) {
         <MenuItem onClick={() => {submitListDelete(subCheckboxes); handleClose();}}>
           일괄삭제
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => {
+          submitListCopy(subCheckboxes);
+          setOpen(true);
+          handleClose();
+        }}>
           선택복사
         </MenuItem>
         <MenuItem onClick={handleClose}>

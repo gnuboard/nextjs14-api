@@ -9,8 +9,12 @@ import './pagination.css';
 import { Typography, Button, Box } from '@mui/material';
 import { useAuth } from '@/components/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { fetchWriteListRequest, deleteWriteListRequest } from '@/app/axios/server_api';
+import {
+  fetchWriteListRequest, deleteWriteListRequest,
+  fetchActionBoardListRequest, executeActionBoardRequest,
+} from '@/app/axios/server_api';
 import { ActionMenu } from '@/components/Dropdown';
+import { BoardSelectionModal } from '@/components/ActionBoards';
 
 async function fetchListWrites(bo_table, sst, sod, sfl, stx, sca, page, per_page) {
   const params = {
@@ -53,6 +57,10 @@ export default function ListWritesPage({ params }) {
   const [totalPages, setTotalPages] = useState(0);
   const [ subCheckboxes, setSubCheckboxes ] = useState({});
   const [ listDeleted, setListDeleted ] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [boardList, setBoardList] = useState([]);
+  const [selectedBoards, setSelectedBoards] = useState([]);
+  const [checkedList, setCheckedList] = useState([]);
 
   const { isLogin } = useAuth();
 
@@ -90,6 +98,41 @@ export default function ListWritesPage({ params }) {
       setListDeleted(!listDeleted);
     }
   }
+
+  const submitListCopy = async (subCheckboxes) => {
+    const checkedBoxes = [];
+    for (const [id, checked] of Object.entries(subCheckboxes)) {
+      if (checked) {
+        checkedBoxes.push(id);
+      }
+    }
+    setCheckedList(checkedBoxes);
+
+    try {
+      const response = await fetchActionBoardListRequest(bo_table, 'copy');
+      setBoardList(response.data);
+    } catch (error) {
+      console.error('Error copying writes:', error);
+    }
+  }
+
+  const handleSubmit = async (selectedBoards) => {
+    const checkedListString = checkedList.join(',');
+    const dataToSend = {
+      "wr_ids": checkedListString,
+      "target_bo_tables": selectedBoards
+    }
+
+    try {
+      const response = await executeActionBoardRequest(bo_table, 'copy', dataToSend);
+      if (response.status === 200) {
+        alert(response.data.result);
+      }
+    } catch (error) {
+      alert(error);
+      console.error('Error copying writes:', error);
+    }
+  };
 
   useEffect(() => {
     const loadWrites = async () => {
@@ -152,9 +195,21 @@ export default function ListWritesPage({ params }) {
           </Button>
           <ActionMenu
             submitListDelete={submitListDelete}
+            submitListCopy={submitListCopy}
+            setOpen={setOpen}
             subCheckboxes={subCheckboxes}
           />
         </Box>
+      </div>
+      <div>
+        <BoardSelectionModal
+          open={open}
+          onClose={() => setOpen(false)}
+          onSubmit={handleSubmit}
+          boardList={boardList}
+          selectedBoards={selectedBoards}
+          setSelectedBoards={setSelectedBoards}
+        />
       </div>
       <ListWrites writes={writes} board={board} subCheckboxes={subCheckboxes} setSubCheckboxes={setSubCheckboxes} />
       <ReactPaginate
