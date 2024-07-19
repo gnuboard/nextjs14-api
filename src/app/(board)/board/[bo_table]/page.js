@@ -131,6 +131,8 @@ export default function ListWritesPage({ params }) {
     } catch (error) {
       alert(error);
       console.error('Error copying writes:', error);
+    } finally {
+      setActionExectued(!actionExectued);
     }
   };
 
