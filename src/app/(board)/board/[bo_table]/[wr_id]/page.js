@@ -15,8 +15,8 @@ import { useAuth } from '@/components/AuthContext';
 import Link from 'next/link';
 import { FileDownloadCard } from '@/components/FileDownload';
 import {
-  fetchWriteRequest, deleteWriteRequest,
-  deleteNoneMemberWriteRequest,
+  fetchWriteRequest, fetchSecretWriteRequest,
+  deleteWriteRequest, deleteNoneMemberWriteRequest,
 } from '@/app/axios/server_api';
 
 async function deleteWrite(bo_table, write) {
@@ -60,6 +60,35 @@ function WriteDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [commentLoading, setCommentLoading] = useState(false);
   const { memberInfo } = useAuth();
+  const [password, setPassword] = useState('');
+  let inputPassword;
+
+  const getSecretWrite = async () => {
+    if (!password) {
+      inputPassword = prompt('비밀번호를 입력해주세요.');
+      if (!inputPassword) {
+        router.push(`/board/${bo_table}`);
+        return;
+      }
+      setPassword(inputPassword);
+    }
+
+    const availablePassword = password || inputPassword;
+
+    try {
+      const response = await fetchSecretWriteRequest(bo_table, wr_id, availablePassword);
+      if (response.status === 200) {
+        setWrite(response.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      if (error.response.status === 403) {
+        alert(error.response.data.detail);
+      }
+      router.push(`/board/${bo_table}`);
+    }
+  }
 
   useEffect(() => {
     if (bo_table && wr_id) {
@@ -70,6 +99,11 @@ function WriteDetailsPage() {
         })
         .catch((error) => {
           console.error('Error fetching write details:', error);
+          if (error.response.status === 403) {
+            if (error.response.data.detail === '비밀글 입니다.') {
+              getSecretWrite();
+            }
+          }
           setLoading(false);
         });
     }

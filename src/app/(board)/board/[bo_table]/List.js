@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { List, ListItem, Divider, Typography, Grid, useMediaQuery, useTheme, Box } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
 import { truncateText, formatDate } from '@/utils/commonUtils';
 import { useSearchParams } from 'next/navigation';
 
@@ -88,6 +89,7 @@ function ListWrites({ board, writes, subCheckboxes, setSubCheckboxes }) {
                     <Box display="flex">
                       <Typography variant="body1" component="div" mr="5px">
                         <Link href={`/board/${board.bo_table}/${write.wr_id}?${query}`} passHref>
+                          {write.wr_option.includes('secret') ? <LockIcon color="action" fontSize="small" /> : ''}
                           {truncateText(write.wr_subject, maxLengthSubject)}
                         </Link>
                       </Typography>

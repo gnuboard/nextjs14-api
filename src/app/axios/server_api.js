@@ -81,6 +81,19 @@ export const fetchWriteRequest = async (bo_table, wr_id) => {
   }
 }
 
+export const fetchSecretWriteRequest = async (bo_table, wr_id, wr_password) => {
+  try {
+    const response = await axiosInstance.post(
+      `/boards/${bo_table}/writes/${wr_id}`,
+      JSON.stringify(wr_password),
+      { headers: { 'Content-Type': 'application/json' } },
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const fetchWriteListRequest = async (bo_table, params) => {
   try {
     const response = await axiosInstance.get(`/boards/${bo_table}/writes`, {
