@@ -47,8 +47,10 @@ async function deleteWrite(bo_table, write) {
       window.location.href = `/board/${bo_table}`;
     }
   } catch (error) {
-    alert(error);
     console.error(error);
+    if (error.response.status === 403) {
+      alert(error.response.data.detail);
+    }
   }
 }
 
