@@ -56,7 +56,7 @@ export default function ListWritesPage({ params }) {
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [ subCheckboxes, setSubCheckboxes ] = useState({});
-  const [ listDeleted, setListDeleted ] = useState(false);
+  const [ actionExectued, setActionExectued ] = useState(false);
   const [open, setOpen] = useState(false)
   const [boardList, setBoardList] = useState([]);
   const [selectedBoards, setSelectedBoards] = useState([]);
@@ -95,7 +95,7 @@ export default function ListWritesPage({ params }) {
         alert("관리자만 일괄 삭제 기능을 사용할 수 있습니다.");
       }
     } finally {
-      setListDeleted(!listDeleted);
+      setActionExectued(!actionExectued);
     }
   }
 
@@ -145,7 +145,7 @@ export default function ListWritesPage({ params }) {
     };
 
     loadWrites();
-  }, [bo_table, currentPage, sst, sod, sfl, stx, sca, per_page, listDeleted]);
+  }, [bo_table, currentPage, sst, sod, sfl, stx, sca, per_page, actionExectued]);
 
   const updateQueryAndLoadWrites = (newPage, newSfl, newStx) => {
     const queryParams = new URLSearchParams({ sfl: newSfl, stx: newStx, page: newPage.toString() });
