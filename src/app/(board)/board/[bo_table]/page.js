@@ -10,6 +10,7 @@ import { Typography, Button, Box } from '@mui/material';
 import { useAuth } from '@/components/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { fetchWriteListRequest, deleteWriteListRequest } from '@/app/axios/server_api';
+import { ActionMenu } from '@/components/Dropdown';
 
 async function fetchListWrites(bo_table, sst, sod, sfl, stx, sca, page, per_page) {
   const params = {
@@ -146,12 +147,13 @@ export default function ListWritesPage({ params }) {
           isLogin={isLogin} 
         />
         <Box>
-          <Button variant="contained" onClick={() => {submitListDelete(subCheckboxes)}} sx={{mr: "10px", backgroundColor: "gray"}}>
-            일괄삭제
-          </Button>
           <Button variant="contained" color="primary" onClick={handleWriteClick}>
             글쓰기
           </Button>
+          <ActionMenu
+            submitListDelete={submitListDelete}
+            subCheckboxes={subCheckboxes}
+          />
         </Box>
       </div>
       <ListWrites writes={writes} board={board} subCheckboxes={subCheckboxes} setSubCheckboxes={setSubCheckboxes} />
