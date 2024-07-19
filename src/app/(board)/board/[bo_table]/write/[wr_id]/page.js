@@ -10,7 +10,10 @@ import { useAuth } from '@/components/AuthContext';
 import { useBoardConfig } from '@/hooks/useBoardConfig';
 import MenuItem from '@mui/material/MenuItem';
 import FileUpload from '@/components/FileUpload';
-import { updateWriteRequest, fetchMemberRequest, fetchWriteRequest, fileUploadRequest } from '@/app/axios/server_api';
+import {
+  updateWriteRequest, fetchMemberRequest, fetchWriteRequest,
+  fileUploadRequest, fetchSecretWriteRequest
+} from '@/app/axios/server_api';
 
 async function submitWriteUpdate(bo_table, wr_id, formData) {
 
@@ -62,6 +65,48 @@ export default function WritePage({ params }) {
   const [file1, setFile1] = useState(null);
   const [file2, setFile2] = useState(null);
   const [writeData, setWriteData] = useState(null);
+  const [password, setPassword] = useState('');
+  let inputPassword;
+
+  const getSecretWrite = async () => {
+    if (!password) {
+      inputPassword = prompt('비밀번호를 입력해주세요.');
+      if (!inputPassword) {
+        router.push(`/board/${bo_table}`);
+        return;
+      }
+      setPassword(inputPassword);
+    }
+
+    const availablePassword = password || inputPassword;
+
+    try {
+      const response = await fetchSecretWriteRequest(bo_table, wr_id, availablePassword);
+      if (response.status === 200) {
+        const data = response.data;
+        setWriteData(data);
+        const wrOptionList = data.wr_option.split(',');
+        setFormValues(prevValues => ({
+          ...prevValues,
+          wr_subject: data?.wr_subject,
+          wr_content: data?.wr_content,
+          wr_name: data?.wr_name,
+          wr_email: data?.wr_email,
+          wr_link1: data?.wr_link1,
+          wr_link2: data?.wr_link2,
+          html: wrOptionList.includes('html1'),
+          mail: wrOptionList.includes('mail'),
+          secret: wrOptionList.includes('secret'),
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+      if (error.response.status === 403) {
+        alert(error.response.data.detail);
+      }
+      router.push(`/board/${bo_table}`);
+    }
+  }
 
   useEffect(() => {
     fetchWriteRequest(bo_table, wr_id)
@@ -93,6 +138,19 @@ export default function WritePage({ params }) {
         mail: wrOptionList.includes('mail'),
         secret: wrOptionList.includes('secret'),
       }));
+    })
+    .catch(error => {
+      console.error(error);
+      if (error.response.status === 403) {
+        if (error.response.data.detail === '비밀글 입니다.') {
+          try {
+            getSecretWrite();
+          } catch (error) {
+            console.error(error);
+            router.push(`/board/${bo_table}`); 
+          }
+        }
+      }
     })
   }, [memberInfo]);
 
