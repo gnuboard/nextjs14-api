@@ -5,6 +5,7 @@ import {
   TextField, Checkbox, FormControlLabel, Button
 } from "@mui/material";
 import { SubdirectoryArrowRight } from "@mui/icons-material";
+import LockIcon from '@mui/icons-material/Lock';
 import { get_img_url } from '@/utils/commonUtils';
 import { useAuth } from '@/components/AuthContext';
 import {
@@ -107,7 +108,18 @@ export default function Comment({ index, bo_table, write, comment, setCommentLoa
             )}
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography variant="body1">{comment.save_content}</Typography>
+            {comment.is_secret
+              ? (
+                <Typography variant="body1" onClick={() => console.log("비밀댓글 조회 함수 필요")} sx={{cursor: 'pointer'}}>
+                  <LockIcon color="action" fontSize="small" /> {comment.save_content}
+                </Typography>
+              )
+              : (
+                <Typography variant="body1">
+                  {comment.save_content}
+                </Typography>
+              )
+            }
           </Stack>
         </Box>
       </Stack>
