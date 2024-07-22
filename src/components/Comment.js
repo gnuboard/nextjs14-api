@@ -229,7 +229,8 @@ export function CommentForm({ commentLoading, setCommentLoading, comment, setSub
         value={commentFormValue.wr_content}
         onChange={(e) => setCommentFormValue({
           ...commentFormValue,
-          wr_content: e.target.value
+          wr_content: e.target.value,
+          comment_id: comment ? comment.wr_id : 0,
         })}
         sx={{
           '& .MuiOutlinedInput-root': {
