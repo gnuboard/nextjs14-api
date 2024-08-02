@@ -54,7 +54,7 @@ const Latest = ({ bo_table, per_page }) => {
                 <div className="flex items-center w-full">
                   <span className="text-sm font-medium mr-2">{truncateText(write.wr_subject, 20)}</span>
                   <span className="text-xs text-gray-500">{write.wr_comment > 0 && `[${write.wr_comment}]`}</span>
-                  <span className="text-xs text-right text-gray-500 w-20">{formatDate(write.wr_datetime)}</span>
+                  <span className="text-xs text-gray-500 ml-auto">{formatDate(write.wr_datetime)}</span>
                 </div>
               </Link>
             </li>

@@ -6,7 +6,6 @@ import ListWrites from './List';
 import ReactPaginate from 'react-paginate';
 import Search from './Search';
 import './pagination.css';
-import { Typography, Button, Box } from '@mui/material';
 import { useAuth } from '@/components/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -40,7 +39,8 @@ export default function ListWritesPage({ params }) {
   const { bo_table } = params;
   const router = useRouter();
   const searchParams = useSearchParams();
-  const sst = 'wr_num, wr_reply'; // 기본 정렬 필드
+  // const sst = 'wr_num, wr_reply'; // 기본 정렬 필드
+  const sst = '';
   const sod = 'and'; // 정렬 순서
   const initialSfl = searchParams.get('sfl') || 'wr_subject';
   const initialStx = searchParams.get('stx') || '';
@@ -55,9 +55,9 @@ export default function ListWritesPage({ params }) {
   const [board, setBoard] = useState({});
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [ subCheckboxes, setSubCheckboxes ] = useState({});
-  const [ actionExectued, setActionExectued ] = useState(false);
-  const [open, setOpen] = useState(false)
+  const [subCheckboxes, setSubCheckboxes] = useState({});
+  const [actionExectued, setActionExectued] = useState(false);
+  const [open, setOpen] = useState(false);
   const [boardList, setBoardList] = useState([]);
   const [selectedBoards, setSelectedBoards] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
@@ -67,11 +67,11 @@ export default function ListWritesPage({ params }) {
 
   const initCheckedStatus = (writes) => {
     const subCheckboxes = {};
-    writes.forEach(write => {
+    writes.forEach((write) => {
       subCheckboxes[write.wr_id] = false;
     });
     return subCheckboxes;
-  }
+  };
 
   const submitListDelete = async (subCheckboxes) => {
     const confirmDelete = confirm('선택한 글 목록을 삭제하시겠습니까?');
@@ -91,14 +91,14 @@ export default function ListWritesPage({ params }) {
     } catch (error) {
       console.error('Error deleting writes:', error);
       if (error.response.status === 401) {
-        alert("관리자 로그인이 필요합니다.");
+        alert('관리자 로그인이 필요합니다.');
       } else if (error.response.status === 403) {
-        alert("관리자만 일괄 삭제 기능을 사용할 수 있습니다.");
+        alert('관리자만 일괄 삭제 기능을 사용할 수 있습니다.');
       }
     } finally {
       setActionExectued(!actionExectued);
     }
-  }
+  };
 
   const submitListAction = async (subCheckboxes, action) => {
     const checkedBoxes = [];
@@ -116,14 +116,14 @@ export default function ListWritesPage({ params }) {
     } catch (error) {
       console.error('Error copying writes:', error);
     }
-  }
+  };
 
   const handleSubmit = async (selectedBoards) => {
     const checkedListString = checkedList.join(',');
     const dataToSend = {
-      "wr_ids": checkedListString,
-      "target_bo_tables": selectedBoards
-    }
+      wr_ids: checkedListString,
+      target_bo_tables: selectedBoards,
+    };
 
     try {
       const response = await executeActionBoardRequest(bo_table, action, dataToSend);
@@ -182,28 +182,31 @@ export default function ListWritesPage({ params }) {
   };
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>{board.bo_subject}</Typography>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Search 
-          sfl={sfl} 
-          stx={stx} 
-          onSflChange={(value) => handleFieldChange('sfl', value)} 
-          onStxChange={(value) => handleFieldChange('stx', value)} 
-          onSubmit={handleSearchSubmit} 
-          isLogin={isLogin} 
+    <div className="container mx-auto px-4 w-full">
+      <h4 className="text-xl font-bold mb-2">{board.bo_subject}</h4>
+      <div className="flex justify-between items-center mb-2">
+        <Search
+          sfl={sfl}
+          stx={stx}
+          onSflChange={(value) => handleFieldChange('sfl', value)}
+          onStxChange={(value) => handleFieldChange('stx', value)}
+          onSubmit={handleSearchSubmit}
+          isLogin={isLogin}
         />
-        <Box>
-          <Button variant="contained" color="primary" onClick={handleWriteClick}>
+        <div>
+          <button
+            className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 text-sm"
+            onClick={handleWriteClick}
+          >
             글쓰기
-          </Button>
+          </button>
           <ActionMenu
             submitListDelete={submitListDelete}
             submitListAction={submitListAction}
             setOpen={setOpen}
             subCheckboxes={subCheckboxes}
           />
-        </Box>
+        </div>
       </div>
       <div>
         <BoardSelectionModal
@@ -216,14 +219,19 @@ export default function ListWritesPage({ params }) {
           action={action}
         />
       </div>
-      <ListWrites writes={writes} board={board} subCheckboxes={subCheckboxes} setSubCheckboxes={setSubCheckboxes} />
+      <ListWrites
+        writes={writes}
+        board={board}
+        subCheckboxes={subCheckboxes}
+        setSubCheckboxes={setSubCheckboxes}
+      />
       <ReactPaginate
         initialPage={currentPage - 1} // Set the initial page correctly
         pageCount={totalPages}
         pageRangeDisplayed={5}
         marginPagesDisplayed={1}
         onPageChange={handlePageClick}
-        containerClassName={'pagination'}
+        containerClassName={'pagination flex justify-center mt-2'}
         activeClassName={'active'}
         previousLabel={'이전'}
         nextLabel={'다음'}

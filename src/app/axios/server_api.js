@@ -54,7 +54,7 @@ export const fetchBoardDataRequest = async (bo_table, params) => {
     const response = await axiosInstance.get(`/boards/${bo_table}/writes`,
       { params: params },
     );
-    console.log('fetchBoardDataRequest', response);
+    // console.log('fetchBoardDataRequest', response);
     return response;
   } catch (error) {
     throw error;
