@@ -50,10 +50,11 @@ export const loginRequest = async (username, password) => {
 
 export const fetchBoardDataRequest = async (bo_table, params) => {
   try {
-    const response = await axiosInstance.get(
-      `/boards/${bo_table}/writes`,
+    // console.log('fetchBoardDataRequest', bo_table, params);
+    const response = await axiosInstance.get(`/boards/${bo_table}/writes`,
       { params: params },
     );
+    console.log('fetchBoardDataRequest', response);
     return response;
   } catch (error) {
     throw error;
@@ -62,8 +63,7 @@ export const fetchBoardDataRequest = async (bo_table, params) => {
 
 export const fetchBoardNewDataRequest = async (bo_table, params) => {
   try {
-    const response = await axiosInstance.get(
-      `/board-new/writes/${bo_table}`,
+    const response = await axiosInstance.get(`/board-new/writes/${bo_table}`,
       { params: params },
     );
     return response;

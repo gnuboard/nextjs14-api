@@ -4,7 +4,6 @@ import React from 'react';
 import './globals.css';
 import { AuthProvider } from '@/components/AuthContext';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import GlobalStyle from '@/components/GlobalStyle';
 import FloatingChatIcon from '@/components/FloatingChatIcon';
 
 export const metadata = {
@@ -14,11 +13,10 @@ export const metadata = {
 const RootLayout = ({ children }) => {
   return (
     <html lang="ko">
-      <body>
+      <body className="bg-gray-100 text-gray-900">
         <ThemeProvider>
           <AuthProvider>
-            <GlobalStyle />
-            <div id="__next">
+            <div id="__next" className="min-h-screen flex flex-col">
               {children}
             </div>
             <FloatingChatIcon />

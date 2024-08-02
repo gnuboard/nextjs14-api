@@ -12,19 +12,19 @@ const Home = () => {
       <h1 className="text-4xl font-bold mb-6">Home</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Latest bo_table="free" view_type="write" rows={5} />
+          <Latest bo_table="free" per_page={5} rows={1} />
         </div>
         <div>
-          <Latest bo_table="notice" view_type="write" rows={5} />
+          {/* <Latest bo_table="notice" view_type="write" rows={5} /> */}
         </div>
       </div>
       <div className="mt-6">
-        <LatestGallerySlide bo_table="gallery" view_type="write" rows={4} />
+        {/* <LatestGallerySlide bo_table="gallery" view_type="write" rows={4} /> */}
       </div>
       <div className="mt-6">
-        <LatestGallery bo_table="gallery" view_type="write" rows={4} />
+        {/* <LatestGallery bo_table="gallery" view_type="write" rows={4} /> */}
       </div>
-      <CookieConsentPopup />
+      {/* <CookieConsentPopup /> */}
     </div>
   );
 };
