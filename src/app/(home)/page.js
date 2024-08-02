@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Latest from '@/components/Latest';
-import LatestGallery from '@/components/LatestGallery';
-import LatestGallerySlide from '@/components/LatestGallerySlide';
+// import LatestGallery from '@/components/LatestGallery';
+// import LatestGallerySlide from '@/components/LatestGallerySlide';
 import CookieConsentPopup from '@/components/CookieConcentPopup';
 
 const Home = () => {
